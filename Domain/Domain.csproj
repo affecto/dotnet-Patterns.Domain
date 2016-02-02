@@ -52,6 +52,7 @@
     <Compile Include="DomainRepositoryBase.cs" />
     <Compile Include="DomainEventBrokerBase.cs" />
     <Compile Include="IDomainEvent.cs" />
+    <Compile Include="IDomainEventBroker.cs" />
     <Compile Include="IDomainEventHandler.cs" />
     <Compile Include="IDomainEventHandlerResolver.cs" />
     <Compile Include="IDomainRepository.cs" />

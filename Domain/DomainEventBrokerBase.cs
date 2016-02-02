@@ -1,20 +1,45 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Affecto.Patterns.Domain
 {
     /// <summary>
     /// Base class for brokers publishing domain events to domain event handlers.
     /// </summary>
-    public abstract class DomainEventBrokerBase
+    public abstract class DomainEventBrokerBase : IDomainEventBroker
     {
+        /// <summary>
+        /// Publishes an event to all event handlers that are registered to it.
+        /// </summary>
+        /// <param name="event">Domain event.</param>
+        public void PublishEvent(IDomainEvent @event)
+        {
+            if (@event == null)
+            {
+                throw new ArgumentNullException("event");
+            }
+
+            PublishEvent((dynamic) @event);
+        }
+
         /// <summary>
         /// Publishes events to all event handlers that are registered to the event.
         /// </summary>
         /// <param name="events">Domain events.</param>
         public void PublishEvents(IEnumerable<IDomainEvent> events)
         {
+            if (events == null)
+            {
+                throw new ArgumentNullException("events");
+            }
+
             foreach (IDomainEvent domainEvent in events)
             {
+                if (domainEvent == null)
+                {
+                    throw new ArgumentNullException("events", "Event list cannot contain null events.");
+                }
+
                 PublishEvent((dynamic) domainEvent);
             }
         }

@@ -16,6 +16,6 @@
 
 | Target | Build |
 | -----------------------|------------------|
-| Project | [![Build status](https://ci.appveyor.com/api/projects/status/83d7pyid8vtv0tf9?svg=true)](https://ci.appveyor.com/project/johannesvaltonen/dotnet-patterns-domain) |
-| Master branch | [![Build status](https://ci.appveyor.com/api/projects/status/83d7pyid8vtv0tf9/branch/master?svg=true)](https://ci.appveyor.com/project/johannesvaltonen/dotnet-patterns-domain/branch/master) |
-| Dev branch | [![Build status](https://ci.appveyor.com/api/projects/status/83d7pyid8vtv0tf9/branch/dev?svg=true)](https://ci.appveyor.com/project/johannesvaltonen/dotnet-patterns-domain/branch/dev) |
+| Project | [![Build status](https://ci.appveyor.com/api/projects/status/83d7pyid8vtv0tf9?svg=true)](https://ci.appveyor.com/project/affecto/dotnet-patterns-domain) |
+| Master branch | [![Build status](https://ci.appveyor.com/api/projects/status/83d7pyid8vtv0tf9/branch/master?svg=true)](https://ci.appveyor.com/project/affecto/dotnet-patterns-domain/branch/master) |
+| Dev branch | [![Build status](https://ci.appveyor.com/api/projects/status/83d7pyid8vtv0tf9/branch/dev?svg=true)](https://ci.appveyor.com/project/affecto/dotnet-patterns-domain/branch/dev) |

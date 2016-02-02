@@ -70,6 +70,7 @@
     <Compile Include="DomainEventTests.cs" />
     <Compile Include="DomainRepositoryBaseTests.cs" />
     <Compile Include="DomainRepositoryTests.cs" />
+    <Compile Include="TestHelpers\AnotherTestDomainEvent.cs" />
     <Compile Include="TestHelpers\InternalAggregateRoot.cs" />
     <Compile Include="TestHelpers\InternalDomainRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
