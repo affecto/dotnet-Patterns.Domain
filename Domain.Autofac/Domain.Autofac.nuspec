@@ -7,6 +7,6 @@
     <description>$description$</description>
     <projectUrl>https://github.com/affecto/dotnet-Patterns.Domain</projectUrl>
     <tags>affecto pattern patterns domain driven design ddd aggregate root domain event autofac</tags>
-    <releaseNotes>Converted from portable class library to regular class library supporting .NET 4.0.</releaseNotes>
+    <releaseNotes>Added asynchronous versions of domain event handlers and domain repositories. Raised to .NET Framework 4.5.2.</releaseNotes>
   </metadata>
 </package>
