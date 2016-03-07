@@ -27,7 +27,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Autofac.Tests
             IContainer container = builder.Build();
 
             ContainerUnitOfWorkDomainEventHandlerResolver sut = new ContainerUnitOfWorkDomainEventHandlerResolver(container);
-            IEnumerable<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>> results = sut.Resolve<TestDomainEvent, TestUnitOfWork>(new TestDomainEvent());
+            IEnumerable<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>> results = sut.ResolveEventHandlers<TestDomainEvent, TestUnitOfWork>(new TestDomainEvent());
 
             Assert.AreEqual(0, results.Count());
         }
@@ -41,7 +41,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Autofac.Tests
             IContainer container = builder.Build();
 
             ContainerUnitOfWorkDomainEventHandlerResolver sut = new ContainerUnitOfWorkDomainEventHandlerResolver(container);
-            IEnumerable<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>> results = sut.Resolve<TestDomainEvent, TestUnitOfWork>(new TestDomainEvent());
+            IEnumerable<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>> results = sut.ResolveEventHandlers<TestDomainEvent, TestUnitOfWork>(new TestDomainEvent());
 
             Assert.AreEqual(1, results.Count());
             Assert.IsInstanceOfType(results.Single(), typeof(TestDomainEventHandler));
@@ -57,7 +57,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Autofac.Tests
             IContainer container = builder.Build();
 
             ContainerUnitOfWorkDomainEventHandlerResolver sut = new ContainerUnitOfWorkDomainEventHandlerResolver(container);
-            IEnumerable<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>> results = sut.Resolve<TestDomainEvent, TestUnitOfWork>(new TestDomainEvent());
+            IEnumerable<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>> results = sut.ResolveEventHandlers<TestDomainEvent, TestUnitOfWork>(new TestDomainEvent());
 
             Assert.AreEqual(2, results.Count());
 

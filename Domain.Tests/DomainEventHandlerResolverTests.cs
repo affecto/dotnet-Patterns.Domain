@@ -38,7 +38,7 @@ namespace Affecto.Patterns.Domain.Tests
         {
             IDomainEventHandler<IDomainEvent> eventHandler = SetupEventHandler();
 
-            IEnumerable<IDomainEventHandler<TestDomainEvent>> results = sut.Resolve(domainEvent);
+            IEnumerable<IDomainEventHandler<TestDomainEvent>> results = sut.ResolveEventHandlers(domainEvent);
 
             Assert.AreEqual(1, results.Count());
             Assert.AreSame(eventHandler, results.Single());
@@ -50,7 +50,7 @@ namespace Affecto.Patterns.Domain.Tests
             IDomainEventHandler<IDomainEvent> eventHandler2 = SetupEventHandler();
             IDomainEventHandler<IDomainEvent> eventHandler1 = SetupEventHandler();
 
-            IEnumerable<IDomainEventHandler<TestDomainEvent>> results = sut.Resolve(domainEvent);
+            IEnumerable<IDomainEventHandler<TestDomainEvent>> results = sut.ResolveEventHandlers(domainEvent);
 
             Assert.AreEqual(2, results.Count());
             Assert.IsTrue(results.Contains(eventHandler1));

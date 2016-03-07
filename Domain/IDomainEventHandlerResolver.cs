@@ -13,7 +13,16 @@ namespace Affecto.Patterns.Domain
         /// <typeparam name="TEvent">The type of the domain event.</typeparam>
         /// <param name="domainEvent">The domain event instance.</param>
         /// <returns>A collection of event handler instances.</returns>
-        IEnumerable<IDomainEventHandler<TEvent>> Resolve<TEvent>(TEvent domainEvent)
+        IEnumerable<IDomainEventHandler<TEvent>> ResolveEventHandlers<TEvent>(TEvent domainEvent)
+            where TEvent : class, IDomainEvent;
+
+        /// <summary>
+        /// Resolves the set of asynchronous event handlers registered for handling the given domain event.
+        /// </summary>
+        /// <typeparam name="TEvent">The type of the domain event.</typeparam>
+        /// <param name="domainEvent">The domain event instance.</param>
+        /// <returns>A collection of event handler instances.</returns>
+        IEnumerable<IAsyncDomainEventHandler<TEvent>> ResolveAsyncEventHandlers<TEvent>(TEvent domainEvent)
             where TEvent : class, IDomainEvent;
     }
 }

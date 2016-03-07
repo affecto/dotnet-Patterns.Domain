@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Affecto.Patterns.Domain.UnitOfWork
 {
@@ -40,11 +41,27 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         protected override void PublishEvent<TDomainEvent>(TDomainEvent domainEvent)
         {
             IEnumerable<IUnitOfWorkDomainEventHandler<TDomainEvent, TUnitOfWork>> eventHandlers =
-                eventHandlerResolver.Resolve<TDomainEvent, TUnitOfWork>(domainEvent);
+                eventHandlerResolver.ResolveEventHandlers<TDomainEvent, TUnitOfWork>(domainEvent);
 
             foreach (IUnitOfWorkDomainEventHandler<TDomainEvent, TUnitOfWork> eventHandler in eventHandlers)
             {
                 eventHandler.Execute(domainEvent, unitOfWork);
+            }
+        }
+
+        /// <summary>
+        /// Publishes the given domain event to all registered event handlers for the event type.
+        /// </summary>
+        /// <typeparam name="TDomainEvent">The type of the domain event.</typeparam>
+        /// <param name="domainEvent">The domain event instance to execute.</param>
+        protected override async Task PublishEventAsync<TDomainEvent>(TDomainEvent domainEvent)
+        {
+            IEnumerable<IAsyncUnitOfWorkDomainEventHandler<TDomainEvent, TUnitOfWork>> eventHandlers =
+                eventHandlerResolver.ResolveAsyncEventHandlers<TDomainEvent, TUnitOfWork>(domainEvent);
+
+            foreach (IAsyncUnitOfWorkDomainEventHandler<TDomainEvent, TUnitOfWork> eventHandler in eventHandlers)
+            {
+                await eventHandler.ExecuteAsync(domainEvent, unitOfWork);
             }
         }
     }

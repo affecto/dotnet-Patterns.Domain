@@ -51,8 +51,8 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
             unitOfWork = Substitute.For<TestUnitOfWork>();
 
             domainEvent = new TestDomainEvent(Guid.NewGuid());
-            unitOfWorkEventHandlerResolver.Resolve<TestDomainEvent, TestUnitOfWork>(domainEvent).Returns(unitOfWorkDomainEventHandlers);
-            eventHandlerResolver.Resolve(domainEvent).Returns(domainEventHandlers);
+            unitOfWorkEventHandlerResolver.ResolveEventHandlers<TestDomainEvent, TestUnitOfWork>(domainEvent).Returns(unitOfWorkDomainEventHandlers);
+            eventHandlerResolver.ResolveEventHandlers(domainEvent).Returns(domainEventHandlers);
 
             sut = new TestUnitOfWorkDomainRepository(eventHandlerResolver, unitOfWorkEventHandlerResolver, unitOfWork);
         }
@@ -125,7 +125,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
             aggregateRoot1.ApplyEvent(domainEvent);
 
             TestDomainEvent domainEvent2 = new TestDomainEvent(Guid.NewGuid());
-            unitOfWorkEventHandlerResolver.Resolve<TestDomainEvent, TestUnitOfWork>(domainEvent2).Returns(unitOfWorkDomainEventHandlers);
+            unitOfWorkEventHandlerResolver.ResolveEventHandlers<TestDomainEvent, TestUnitOfWork>(domainEvent2).Returns(unitOfWorkDomainEventHandlers);
 
             TestAggregateRoot aggregateRoot2 = new TestAggregateRoot(Guid.NewGuid());
             aggregateRoot2.ApplyEvent(domainEvent2);

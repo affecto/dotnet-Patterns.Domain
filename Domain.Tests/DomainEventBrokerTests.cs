@@ -29,9 +29,9 @@ namespace Affecto.Patterns.Domain.Tests
             domainEventHandler3 = Substitute.For<IDomainEventHandler<AnotherTestDomainEvent>>();
 
             resolver = Substitute.For<IDomainEventHandlerResolver>();
-            resolver.Resolve(testEvent1).Returns(new [] { domainEventHandler1, domainEventHandler2 });
-            resolver.Resolve(testEvent2).Returns(new[] { domainEventHandler1, domainEventHandler2 });
-            resolver.Resolve(testEvent3).Returns(new [] { domainEventHandler3 });
+            resolver.ResolveEventHandlers(testEvent1).Returns(new [] { domainEventHandler1, domainEventHandler2 });
+            resolver.ResolveEventHandlers(testEvent2).Returns(new[] { domainEventHandler1, domainEventHandler2 });
+            resolver.ResolveEventHandlers(testEvent3).Returns(new [] { domainEventHandler3 });
 
             sut = new DomainEventBroker(resolver);
         }

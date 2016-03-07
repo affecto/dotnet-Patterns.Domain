@@ -31,10 +31,21 @@ namespace Affecto.Patterns.Domain
         /// <typeparam name="TEvent">The type of the domain event.</typeparam>
         /// <param name="domainEvent">The domain event instance.</param>
         /// <returns>A collection of event handler instances.</returns>
-        public virtual IEnumerable<IDomainEventHandler<TEvent>> Resolve<TEvent>(TEvent domainEvent)
+        public virtual IEnumerable<IDomainEventHandler<TEvent>> ResolveEventHandlers<TEvent>(TEvent domainEvent)
             where TEvent : class, IDomainEvent
         {
             return eventHandlers.OfType<IDomainEventHandler<TEvent>>();
+        }
+
+        /// <summary>
+        /// Resolves the set of asynchronous event handlers registered for handling the given domain event.
+        /// </summary>
+        /// <typeparam name="TEvent">The type of the domain event.</typeparam>
+        /// <param name="domainEvent">The domain event instance.</param>
+        /// <returns>A collection of event handler instances.</returns>
+        public IEnumerable<IAsyncDomainEventHandler<TEvent>> ResolveAsyncEventHandlers<TEvent>(TEvent domainEvent) where TEvent : class, IDomainEvent
+        {
+            return eventHandlers.OfType<IAsyncDomainEventHandler<TEvent>>();
         }
     }
 }
