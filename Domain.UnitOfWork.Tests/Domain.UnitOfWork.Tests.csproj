@@ -65,6 +65,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="TestHelpers\TestAsyncUnitOfWorkDomainRepository.cs" />
     <Compile Include="UnitOfWorkDomainEventBrokerTests.cs" />
     <Compile Include="TestHelpers\InternalCompositeRepository.cs" />
     <Compile Include="TestHelpers\InternalUnitOfWork.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="TestHelpers\TestUnitOfWorkDomainRepository.cs" />
     <Compile Include="UnitOfWorkDomainEventHandlerResolverTests.cs" />
     <Compile Include="CompositeUnitOfWorkDomainRepositoryTests.cs" />
+    <Compile Include="AsyncUnitOfWorkDomainRepositoryTests.cs" />
     <Compile Include="UnitOfWorkDomainRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +92,10 @@
     <ProjectReference Include="..\Domain\Domain.csproj">
       <Project>{00034256-074E-4BAE-B0A9-CAF2EB76BE21}</Project>
       <Name>Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tests.Infrastructure\Tests.Infrastructure.csproj">
+      <Project>{AF77F4A3-1896-4464-82FF-457E38F31915}</Project>
+      <Name>Tests.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

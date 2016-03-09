@@ -53,8 +53,8 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
 
             domainEvent1 = new TestDomainEvent(Guid.NewGuid());
             domainEvent2 = new TestDomainEvent(Guid.NewGuid());
-            unitOfWorkEventHandlerResolver.ResolveEventHandlers<TestDomainEvent, TestUnitOfWork>(domainEvent1).Returns(unitOfWorkDomainEventHandlers);
-            unitOfWorkEventHandlerResolver.ResolveEventHandlers<TestDomainEvent, TestUnitOfWork>(domainEvent2).Returns(unitOfWorkDomainEventHandlers);
+            unitOfWorkEventHandlerResolver.ResolveEventHandlers<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>>().Returns(unitOfWorkDomainEventHandlers);
+            unitOfWorkEventHandlerResolver.ResolveEventHandlers<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>>().Returns(unitOfWorkDomainEventHandlers);
             eventHandlerResolver.ResolveEventHandlers<IDomainEventHandler<TestDomainEvent>>().Returns(domainEventHandlers);
             eventHandlerResolver.ResolveEventHandlers<IDomainEventHandler<TestDomainEvent>>().Returns(domainEventHandlers);
 
@@ -170,8 +170,8 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
                 domainEventHandler
             };
 
-            unitOfWorkEventHandlerResolver.ResolveEventHandlers<TestDomainEvent, InternalUnitOfWork>(domainEvent1).Returns(eventHandlers);
-            unitOfWorkEventHandlerResolver.ResolveEventHandlers<TestDomainEvent, InternalUnitOfWork>(domainEvent2).Returns(eventHandlers);
+            unitOfWorkEventHandlerResolver.ResolveEventHandlers<IUnitOfWorkDomainEventHandler<TestDomainEvent, InternalUnitOfWork>>().Returns(eventHandlers);
+            unitOfWorkEventHandlerResolver.ResolveEventHandlers<IUnitOfWorkDomainEventHandler<TestDomainEvent, InternalUnitOfWork>>().Returns(eventHandlers);
 
             InternalAggregateRoot aggregateRoot = new InternalAggregateRoot(Guid.NewGuid());
             aggregateRoot.ApplyEvent(domainEvent1);

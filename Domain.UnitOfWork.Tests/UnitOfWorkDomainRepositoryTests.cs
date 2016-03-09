@@ -51,7 +51,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
             unitOfWork = Substitute.For<TestUnitOfWork>();
 
             domainEvent = new TestDomainEvent(Guid.NewGuid());
-            unitOfWorkEventHandlerResolver.ResolveEventHandlers<TestDomainEvent, TestUnitOfWork>(domainEvent).Returns(unitOfWorkDomainEventHandlers);
+            unitOfWorkEventHandlerResolver.ResolveEventHandlers<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>>().Returns(unitOfWorkDomainEventHandlers);
             eventHandlerResolver.ResolveEventHandlers<IDomainEventHandler<TestDomainEvent>>().Returns(domainEventHandlers);
 
             sut = new TestUnitOfWorkDomainRepository(eventHandlerResolver, unitOfWorkEventHandlerResolver, unitOfWork);
@@ -125,7 +125,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
             aggregateRoot1.ApplyEvent(domainEvent);
 
             TestDomainEvent domainEvent2 = new TestDomainEvent(Guid.NewGuid());
-            unitOfWorkEventHandlerResolver.ResolveEventHandlers<TestDomainEvent, TestUnitOfWork>(domainEvent2).Returns(unitOfWorkDomainEventHandlers);
+            unitOfWorkEventHandlerResolver.ResolveEventHandlers<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>>().Returns(unitOfWorkDomainEventHandlers);
 
             TestAggregateRoot aggregateRoot2 = new TestAggregateRoot(Guid.NewGuid());
             aggregateRoot2.ApplyEvent(domainEvent2);
@@ -148,20 +148,17 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
 
             unitOfWork
                 .When(u => u.SaveChanges())
-                .Do(callInfo => { throw new OperationCanceledException(); });
-
-            bool exceptionCatched = false;
+                .Do(callInfo => { throw new InvalidOperationException(); });
 
             try
             {
                 sut.ApplyChanges(aggregateRoot);
+                Assert.Fail("No exception thrown.");
             }
-            catch (OperationCanceledException)
+            catch (InvalidOperationException)
             {
-                exceptionCatched = true;
             }
 
-            Assert.IsTrue(exceptionCatched);
             unitOfWorkDomainEventHandler1.Received().Execute(domainEvent, unitOfWork);
             unitOfWorkDomainEventHandler2.Received().Execute(domainEvent, unitOfWork);
             unitOfWork.Received().SaveChanges();

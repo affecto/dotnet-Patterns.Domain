@@ -68,16 +68,21 @@
     <Compile Include="AggregateRootTests.cs" />
     <Compile Include="DomainEventHandlerResolverTests.cs" />
     <Compile Include="DomainEventTests.cs" />
+    <Compile Include="AsyncDomainRepositoryBaseTests.cs" />
     <Compile Include="DomainRepositoryBaseTests.cs" />
+    <Compile Include="AsyncDomainRepositoryTests.cs" />
     <Compile Include="DomainRepositoryTests.cs" />
     <Compile Include="TestHelpers\AnotherTestDomainEvent.cs" />
     <Compile Include="TestHelpers\InternalAggregateRoot.cs" />
+    <Compile Include="TestHelpers\InternalAsyncDomainRepository.cs" />
     <Compile Include="TestHelpers\InternalDomainRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers\TestAggregateRoot.cs" />
     <Compile Include="TestHelpers\TestDomainEvent.cs" />
     <Compile Include="TestHelpers\TestDomainEventBroker.cs" />
+    <Compile Include="TestHelpers\TestAsyncDomainRepository.cs" />
     <Compile Include="TestHelpers\TestDomainRepository.cs" />
+    <Compile Include="TestHelpers\TestAsyncDomainRepositoryBase.cs" />
     <Compile Include="TestHelpers\TestDomainRepositoryBase.cs" />
     <Compile Include="DomainEventBrokerTests.cs" />
   </ItemGroup>
@@ -85,6 +90,10 @@
     <ProjectReference Include="..\Domain\Domain.csproj">
       <Project>{00034256-074E-4BAE-B0A9-CAF2EB76BE21}</Project>
       <Name>Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tests.Infrastructure\Tests.Infrastructure.csproj">
+      <Project>{AF77F4A3-1896-4464-82FF-457E38F31915}</Project>
+      <Name>Tests.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
