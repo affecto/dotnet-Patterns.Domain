@@ -28,13 +28,11 @@ namespace Affecto.Patterns.Domain.Autofac
         /// <summary>
         /// Resolves the set of event handlers registered for handling the given domain event.
         /// </summary>
-        /// <typeparam name="TEvent">The type of the domain event.</typeparam>
-        /// <param name="domainEvent">The domain event instance.</param>
+        /// <typeparam name="TEventHandler">The type of the domain event handler.</typeparam>
         /// <returns>A collection of event handler instances.</returns>
-        public virtual IEnumerable<IDomainEventHandler<TEvent>> Resolve<TEvent>(TEvent domainEvent)
-            where TEvent : class, IDomainEvent
+        public IEnumerable<TEventHandler> ResolveEventHandlers<TEventHandler>() where TEventHandler : class, IDomainEventHandler
         {
-            return componentContext.Resolve<IEnumerable<IDomainEventHandler<TEvent>>>();
+            return componentContext.Resolve<IEnumerable<TEventHandler>>();
         }
     }
 }

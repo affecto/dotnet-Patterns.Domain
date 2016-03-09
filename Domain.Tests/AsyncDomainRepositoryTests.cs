@@ -7,22 +7,22 @@ using NSubstitute;
 namespace Affecto.Patterns.Domain.Tests
 {
     [TestClass]
-    public class DomainRepositoryTests
+    public class AsyncDomainRepositoryTests
     {
-        private IDomainEventHandler<TestDomainEvent> domainEventHandler1;
-        private IDomainEventHandler<TestDomainEvent> domainEventHandler2;
+        private IAsyncDomainEventHandler<TestDomainEvent> domainEventHandler1;
+        private IAsyncDomainEventHandler<TestDomainEvent> domainEventHandler2;
         private IDomainEventHandlerResolver eventHandlerResolver;
         private TestDomainEvent domainEvent;
 
-        private TestDomainRepository sut;
+        private TestAsyncDomainRepository sut;
 
         [TestInitialize]
         public void Setup()
         {
-            domainEventHandler1 = Substitute.For<IDomainEventHandler<TestDomainEvent>>();
-            domainEventHandler2 = Substitute.For<IDomainEventHandler<TestDomainEvent>>();
+            domainEventHandler1 = Substitute.For<IAsyncDomainEventHandler<TestDomainEvent>>();
+            domainEventHandler2 = Substitute.For<IAsyncDomainEventHandler<TestDomainEvent>>();
 
-            IEnumerable<IDomainEventHandler<TestDomainEvent>> eventHandlers = new List<IDomainEventHandler<TestDomainEvent>>
+            IEnumerable<IAsyncDomainEventHandler<TestDomainEvent>> eventHandlers = new List<IAsyncDomainEventHandler<TestDomainEvent>>
             {
                 domainEventHandler1,
                 domainEventHandler2
@@ -30,16 +30,16 @@ namespace Affecto.Patterns.Domain.Tests
 
             domainEvent = new TestDomainEvent(Guid.NewGuid());
             eventHandlerResolver = Substitute.For<IDomainEventHandlerResolver>();
-            eventHandlerResolver.ResolveEventHandlers<IDomainEventHandler<TestDomainEvent>>().Returns(eventHandlers);
+            eventHandlerResolver.ResolveEventHandlers<IAsyncDomainEventHandler<TestDomainEvent>>().Returns(eventHandlers);
 
-            sut = new TestDomainRepository(eventHandlerResolver);
+            sut = new TestAsyncDomainRepository(eventHandlerResolver);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void NullEventHandlerResolverThrowsException()
         {
-            sut = new TestDomainRepository(null);
+            sut = new TestAsyncDomainRepository(null);
         }
 
         [TestMethod]
@@ -48,12 +48,12 @@ namespace Affecto.Patterns.Domain.Tests
             TestAggregateRoot aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
             aggregateRoot.ApplyEvent(domainEvent);
 
-            sut.ApplyChanges(aggregateRoot);
+            sut.ApplyChangesAsync(aggregateRoot).Wait();
 
             Received.InOrder(() =>
             {
-                domainEventHandler1.Execute(domainEvent);
-                domainEventHandler2.Execute(domainEvent);
+                domainEventHandler1.ExecuteAsync(domainEvent);
+                domainEventHandler2.ExecuteAsync(domainEvent);
             });
         }
 
@@ -66,11 +66,11 @@ namespace Affecto.Patterns.Domain.Tests
             InternalAggregateRoot aggregateRoot = new InternalAggregateRoot(Guid.NewGuid());
             aggregateRoot.ApplyEvent(domainEvent);
 
-            var privateSut = new InternalDomainRepository(eventHandlerResolver);
-            privateSut.ApplyChanges(aggregateRoot);
+            var privateSut = new InternalAsyncDomainRepository(eventHandlerResolver);
+            privateSut.ApplyChangesAsync(aggregateRoot).Wait();
 
-            domainEventHandler1.Received().Execute(domainEvent);
-            domainEventHandler2.Received().Execute(domainEvent);
+            domainEventHandler1.Received().ExecuteAsync(domainEvent);
+            domainEventHandler2.Received().ExecuteAsync(domainEvent);
         }
     }
 }

@@ -13,14 +13,12 @@ namespace Affecto.Patterns.Domain.Tests
     [TestClass]
     public class DomainEventHandlerResolverTests
     {
-        private TestDomainEvent domainEvent;
         private List<IDomainEventHandler<IDomainEvent>> eventHandlers;
         private DomainEventHandlerResolver sut;
 
         [TestInitialize]
         public void Setup()
         {
-            domainEvent = new TestDomainEvent(Guid.NewGuid());
             eventHandlers =  new List<IDomainEventHandler<IDomainEvent>>();
 
             sut = new DomainEventHandlerResolver(eventHandlers);
@@ -38,7 +36,7 @@ namespace Affecto.Patterns.Domain.Tests
         {
             IDomainEventHandler<IDomainEvent> eventHandler = SetupEventHandler();
 
-            IEnumerable<IDomainEventHandler<TestDomainEvent>> results = sut.Resolve(domainEvent);
+            IEnumerable<IDomainEventHandler<TestDomainEvent>> results = sut.ResolveEventHandlers<IDomainEventHandler<TestDomainEvent>>();
 
             Assert.AreEqual(1, results.Count());
             Assert.AreSame(eventHandler, results.Single());
@@ -50,7 +48,7 @@ namespace Affecto.Patterns.Domain.Tests
             IDomainEventHandler<IDomainEvent> eventHandler2 = SetupEventHandler();
             IDomainEventHandler<IDomainEvent> eventHandler1 = SetupEventHandler();
 
-            IEnumerable<IDomainEventHandler<TestDomainEvent>> results = sut.Resolve(domainEvent);
+            IEnumerable<IDomainEventHandler<TestDomainEvent>> results = sut.ResolveEventHandlers<IDomainEventHandler<TestDomainEvent>>();
 
             Assert.AreEqual(2, results.Count());
             Assert.IsTrue(results.Contains(eventHandler1));

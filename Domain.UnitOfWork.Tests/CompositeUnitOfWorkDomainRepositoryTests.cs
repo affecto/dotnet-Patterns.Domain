@@ -53,10 +53,10 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
 
             domainEvent1 = new TestDomainEvent(Guid.NewGuid());
             domainEvent2 = new TestDomainEvent(Guid.NewGuid());
-            unitOfWorkEventHandlerResolver.Resolve<TestDomainEvent, TestUnitOfWork>(domainEvent1).Returns(unitOfWorkDomainEventHandlers);
-            unitOfWorkEventHandlerResolver.Resolve<TestDomainEvent, TestUnitOfWork>(domainEvent2).Returns(unitOfWorkDomainEventHandlers);
-            eventHandlerResolver.Resolve(domainEvent1).Returns(domainEventHandlers);
-            eventHandlerResolver.Resolve(domainEvent2).Returns(domainEventHandlers);
+            unitOfWorkEventHandlerResolver.ResolveEventHandlers<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>>().Returns(unitOfWorkDomainEventHandlers);
+            unitOfWorkEventHandlerResolver.ResolveEventHandlers<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>>().Returns(unitOfWorkDomainEventHandlers);
+            eventHandlerResolver.ResolveEventHandlers<IDomainEventHandler<TestDomainEvent>>().Returns(domainEventHandlers);
+            eventHandlerResolver.ResolveEventHandlers<IDomainEventHandler<TestDomainEvent>>().Returns(domainEventHandlers);
 
             sut = new TestCompositeUnitOfWorkDomainRepository(eventHandlerResolver, unitOfWorkEventHandlerResolver, unitOfWork);
         }
@@ -170,8 +170,8 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
                 domainEventHandler
             };
 
-            unitOfWorkEventHandlerResolver.Resolve<TestDomainEvent, InternalUnitOfWork>(domainEvent1).Returns(eventHandlers);
-            unitOfWorkEventHandlerResolver.Resolve<TestDomainEvent, InternalUnitOfWork>(domainEvent2).Returns(eventHandlers);
+            unitOfWorkEventHandlerResolver.ResolveEventHandlers<IUnitOfWorkDomainEventHandler<TestDomainEvent, InternalUnitOfWork>>().Returns(eventHandlers);
+            unitOfWorkEventHandlerResolver.ResolveEventHandlers<IUnitOfWorkDomainEventHandler<TestDomainEvent, InternalUnitOfWork>>().Returns(eventHandlers);
 
             InternalAggregateRoot aggregateRoot = new InternalAggregateRoot(Guid.NewGuid());
             aggregateRoot.ApplyEvent(domainEvent1);

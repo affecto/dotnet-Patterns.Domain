@@ -27,7 +27,7 @@ namespace Affecto.Patterns.Domain.Autofac.Tests
             IContainer container = builder.Build();
 
             ContainerDomainEventHandlerResolver sut = new ContainerDomainEventHandlerResolver(container);
-            IEnumerable<IDomainEventHandler<TestDomainEvent>> results = sut.Resolve(new TestDomainEvent());
+            IEnumerable<IDomainEventHandler<TestDomainEvent>> results = sut.ResolveEventHandlers<IDomainEventHandler<TestDomainEvent>>();
 
             Assert.AreEqual(0, results.Count());
         }
@@ -41,7 +41,7 @@ namespace Affecto.Patterns.Domain.Autofac.Tests
             IContainer container = builder.Build();
 
             ContainerDomainEventHandlerResolver sut = new ContainerDomainEventHandlerResolver(container);
-            IEnumerable<IDomainEventHandler<TestDomainEvent>> results = sut.Resolve(new TestDomainEvent());
+            IEnumerable<IDomainEventHandler<TestDomainEvent>> results = sut.ResolveEventHandlers<IDomainEventHandler<TestDomainEvent>>();
 
             Assert.AreEqual(1, results.Count());
             Assert.IsInstanceOfType(results.Single(), typeof(TestDomainEventHandler));
@@ -57,7 +57,7 @@ namespace Affecto.Patterns.Domain.Autofac.Tests
             IContainer container = builder.Build();
 
             ContainerDomainEventHandlerResolver sut = new ContainerDomainEventHandlerResolver(container);
-            IEnumerable<IDomainEventHandler<TestDomainEvent>> results = sut.Resolve(new TestDomainEvent());
+            IEnumerable<IDomainEventHandler<TestDomainEvent>> results = sut.ResolveEventHandlers<IDomainEventHandler<TestDomainEvent>>();
 
             Assert.AreEqual(2, results.Count());
 

@@ -12,11 +12,12 @@
     <AssemblyName>Affecto.Patterns.Domain</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -26,6 +27,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,6 +36,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
@@ -43,12 +46,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AggregateRoot.cs" />
+    <Compile Include="AsyncDomainRepositoryBase.cs" />
     <Compile Include="DomainEvent.cs" />
     <Compile Include="DomainEventBroker.cs" />
     <Compile Include="DomainEventHandlerResolver.cs" />
+    <Compile Include="AsyncDomainRepository.cs" />
     <Compile Include="DomainRepository.cs" />
     <Compile Include="DomainRepositoryBase.cs" />
     <Compile Include="DomainEventBrokerBase.cs" />
+    <Compile Include="IAsyncDomainEventHandler.cs" />
+    <Compile Include="IAsyncDomainRepository.cs" />
     <Compile Include="IDomainEvent.cs" />
     <Compile Include="IDomainEventBroker.cs" />
     <Compile Include="IDomainEventHandler.cs" />
