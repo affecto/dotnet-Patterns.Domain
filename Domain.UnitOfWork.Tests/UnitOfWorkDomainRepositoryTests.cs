@@ -52,7 +52,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
 
             domainEvent = new TestDomainEvent(Guid.NewGuid());
             unitOfWorkEventHandlerResolver.ResolveEventHandlers<TestDomainEvent, TestUnitOfWork>(domainEvent).Returns(unitOfWorkDomainEventHandlers);
-            eventHandlerResolver.ResolveEventHandlers(domainEvent).Returns(domainEventHandlers);
+            eventHandlerResolver.ResolveEventHandlers<IDomainEventHandler<TestDomainEvent>>().Returns(domainEventHandlers);
 
             sut = new TestUnitOfWorkDomainRepository(eventHandlerResolver, unitOfWorkEventHandlerResolver, unitOfWork);
         }

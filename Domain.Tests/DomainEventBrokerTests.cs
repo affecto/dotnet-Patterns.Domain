@@ -15,7 +15,6 @@ namespace Affecto.Patterns.Domain.Tests
 
         private readonly TestDomainEvent testEvent1 = new TestDomainEvent(Guid.NewGuid());
         private readonly TestDomainEvent testEvent2 = new TestDomainEvent(Guid.NewGuid());
-        private readonly AnotherTestDomainEvent testEvent3 = new AnotherTestDomainEvent(Guid.NewGuid());
         
         private IDomainEventHandler<TestDomainEvent> domainEventHandler1;
         private IDomainEventHandler<TestDomainEvent> domainEventHandler2;
@@ -29,9 +28,9 @@ namespace Affecto.Patterns.Domain.Tests
             domainEventHandler3 = Substitute.For<IDomainEventHandler<AnotherTestDomainEvent>>();
 
             resolver = Substitute.For<IDomainEventHandlerResolver>();
-            resolver.ResolveEventHandlers(testEvent1).Returns(new [] { domainEventHandler1, domainEventHandler2 });
-            resolver.ResolveEventHandlers(testEvent2).Returns(new[] { domainEventHandler1, domainEventHandler2 });
-            resolver.ResolveEventHandlers(testEvent3).Returns(new [] { domainEventHandler3 });
+            resolver.ResolveEventHandlers<IDomainEventHandler<TestDomainEvent>>().Returns(new [] { domainEventHandler1, domainEventHandler2 });
+            resolver.ResolveEventHandlers<IDomainEventHandler<TestDomainEvent>>().Returns(new[] { domainEventHandler1, domainEventHandler2 });
+            resolver.ResolveEventHandlers<IDomainEventHandler<AnotherTestDomainEvent>>().Returns(new [] { domainEventHandler3 });
 
             sut = new DomainEventBroker(resolver);
         }

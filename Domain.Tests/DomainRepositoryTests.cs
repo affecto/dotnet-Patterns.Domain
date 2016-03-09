@@ -30,7 +30,7 @@ namespace Affecto.Patterns.Domain.Tests
 
             domainEvent = new TestDomainEvent(Guid.NewGuid());
             eventHandlerResolver = Substitute.For<IDomainEventHandlerResolver>();
-            eventHandlerResolver.ResolveEventHandlers(domainEvent).Returns(eventHandlers);
+            eventHandlerResolver.ResolveEventHandlers<IDomainEventHandler<TestDomainEvent>>().Returns(eventHandlers);
 
             sut = new TestDomainRepository(eventHandlerResolver);
         }

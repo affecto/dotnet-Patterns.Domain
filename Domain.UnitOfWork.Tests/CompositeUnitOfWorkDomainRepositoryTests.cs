@@ -55,8 +55,8 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
             domainEvent2 = new TestDomainEvent(Guid.NewGuid());
             unitOfWorkEventHandlerResolver.ResolveEventHandlers<TestDomainEvent, TestUnitOfWork>(domainEvent1).Returns(unitOfWorkDomainEventHandlers);
             unitOfWorkEventHandlerResolver.ResolveEventHandlers<TestDomainEvent, TestUnitOfWork>(domainEvent2).Returns(unitOfWorkDomainEventHandlers);
-            eventHandlerResolver.ResolveEventHandlers(domainEvent1).Returns(domainEventHandlers);
-            eventHandlerResolver.ResolveEventHandlers(domainEvent2).Returns(domainEventHandlers);
+            eventHandlerResolver.ResolveEventHandlers<IDomainEventHandler<TestDomainEvent>>().Returns(domainEventHandlers);
+            eventHandlerResolver.ResolveEventHandlers<IDomainEventHandler<TestDomainEvent>>().Returns(domainEventHandlers);
 
             sut = new TestCompositeUnitOfWorkDomainRepository(eventHandlerResolver, unitOfWorkEventHandlerResolver, unitOfWork);
         }
