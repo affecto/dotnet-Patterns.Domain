@@ -66,6 +66,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AggregateRootTests.cs" />
+    <Compile Include="AsyncDomainEventBrokerTests.cs" />
     <Compile Include="DomainEventHandlerResolverTests.cs" />
     <Compile Include="DomainEventTests.cs" />
     <Compile Include="AsyncDomainRepositoryBaseTests.cs" />

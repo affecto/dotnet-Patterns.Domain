@@ -38,7 +38,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// </summary>
         /// <typeparam name="TDomainEvent">The type of the domain event.</typeparam>
         /// <param name="domainEvent">The domain event instance to execute.</param>
-        protected override void PublishEvent<TDomainEvent>(TDomainEvent domainEvent)
+        protected override void Publish<TDomainEvent>(TDomainEvent domainEvent)
         {
             IEnumerable<IUnitOfWorkDomainEventHandler<TDomainEvent, TUnitOfWork>> eventHandlers =
                 eventHandlerResolver.ResolveEventHandlers<IUnitOfWorkDomainEventHandler<TDomainEvent, TUnitOfWork>>();
@@ -54,7 +54,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// </summary>
         /// <typeparam name="TDomainEvent">The type of the domain event.</typeparam>
         /// <param name="domainEvent">The domain event instance to execute.</param>
-        protected override async Task PublishEventAsync<TDomainEvent>(TDomainEvent domainEvent)
+        protected override async Task PublishAsync<TDomainEvent>(TDomainEvent domainEvent)
         {
             IEnumerable<IAsyncUnitOfWorkDomainEventHandler<TDomainEvent, TUnitOfWork>> eventHandlers =
                 eventHandlerResolver.ResolveEventHandlers<IAsyncUnitOfWorkDomainEventHandler<TDomainEvent, TUnitOfWork>>();
