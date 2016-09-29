@@ -20,7 +20,7 @@ namespace Affecto.Patterns.Domain
                 throw new ArgumentNullException("event");
             }
 
-            PublishEvent((dynamic) @event);
+            Publish((dynamic) @event);
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Affecto.Patterns.Domain
                 throw new ArgumentNullException("event");
             }
 
-            await PublishEvent((dynamic) @event);
+            await PublishAsync((dynamic) @event);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Affecto.Patterns.Domain
                     throw new ArgumentNullException("events", "Event list cannot contain null events.");
                 }
 
-                PublishEvent((dynamic) domainEvent);
+                Publish((dynamic) domainEvent);
             }
         }
 
@@ -77,7 +77,7 @@ namespace Affecto.Patterns.Domain
                     throw new ArgumentNullException("events", "Event list cannot contain null events.");
                 }
 
-                await PublishEventAsync((dynamic) domainEvent);
+                await PublishAsync((dynamic) domainEvent);
             }
         }
 
@@ -86,13 +86,13 @@ namespace Affecto.Patterns.Domain
         /// </summary>
         /// <typeparam name="TDomainEvent">The type of the domain event.</typeparam>
         /// <param name="domainEvent">The domain event instance to execute.</param>
-        protected abstract void PublishEvent<TDomainEvent>(TDomainEvent domainEvent) where TDomainEvent : class, IDomainEvent;
+        protected abstract void Publish<TDomainEvent>(TDomainEvent domainEvent) where TDomainEvent : class, IDomainEvent;
 
         /// <summary>
         /// Publishes the given domain event asynchronously to all registered event handlers for the event type.
         /// </summary>
         /// <typeparam name="TDomainEvent">The type of the domain event.</typeparam>
         /// <param name="domainEvent">The domain event instance to execute.</param>
-        protected abstract Task PublishEventAsync<TDomainEvent>(TDomainEvent domainEvent) where TDomainEvent : class, IDomainEvent;
+        protected abstract Task PublishAsync<TDomainEvent>(TDomainEvent domainEvent) where TDomainEvent : class, IDomainEvent;
     }
 }
