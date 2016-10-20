@@ -33,7 +33,7 @@ namespace Affecto.Patterns.Domain
         /// <param name="aggregateRoot">The changed aggregate root instance.</param>
         public virtual async Task ApplyChangesAsync(TAggregate aggregateRoot)
         {
-            await ExecuteAppliedEventsAsync(aggregateRoot, domainEventBroker);
+            await ExecuteAppliedEventsAsync(aggregateRoot, domainEventBroker).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Affecto.Patterns.Domain
 
             foreach (TAggregate aggregateRoot in aggregateRoots)
             {
-                await ExecuteAppliedEventsAsync(aggregateRoot, domainEventBroker);
+                await ExecuteAppliedEventsAsync(aggregateRoot, domainEventBroker).ConfigureAwait(false);
             }
         }
 
@@ -72,7 +72,7 @@ namespace Affecto.Patterns.Domain
                 throw new ArgumentNullException("aggregateRoot");
             }
 
-            await eventBroker.PublishEventsAsync(aggregateRoot.GetAppliedEvents());
+            await eventBroker.PublishEventsAsync(aggregateRoot.GetAppliedEvents()).ConfigureAwait(false);
         }
     }
 }

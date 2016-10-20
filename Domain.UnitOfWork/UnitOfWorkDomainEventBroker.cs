@@ -47,6 +47,14 @@ namespace Affecto.Patterns.Domain.UnitOfWork
             {
                 eventHandler.Execute(domainEvent, unitOfWork);
             }
+
+            IEnumerable<IAsyncUnitOfWorkDomainEventHandler<TDomainEvent, TUnitOfWork>> asyncEventHandlers =
+                eventHandlerResolver.ResolveEventHandlers<IAsyncUnitOfWorkDomainEventHandler<TDomainEvent, TUnitOfWork>>();
+
+            foreach (IAsyncUnitOfWorkDomainEventHandler<TDomainEvent, TUnitOfWork> eventHandler in asyncEventHandlers)
+            {
+                eventHandler.ExecuteAsync(domainEvent, unitOfWork).Wait();
+            }
         }
 
         /// <summary>
@@ -56,12 +64,20 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// <param name="domainEvent">The domain event instance to execute.</param>
         protected override async Task PublishAsync<TDomainEvent>(TDomainEvent domainEvent)
         {
-            IEnumerable<IAsyncUnitOfWorkDomainEventHandler<TDomainEvent, TUnitOfWork>> eventHandlers =
+            IEnumerable<IUnitOfWorkDomainEventHandler<TDomainEvent, TUnitOfWork>> eventHandlers =
+                eventHandlerResolver.ResolveEventHandlers<IUnitOfWorkDomainEventHandler<TDomainEvent, TUnitOfWork>>();
+
+            foreach (IUnitOfWorkDomainEventHandler<TDomainEvent, TUnitOfWork> eventHandler in eventHandlers)
+            {
+                eventHandler.Execute(domainEvent, unitOfWork);
+            }
+
+            IEnumerable<IAsyncUnitOfWorkDomainEventHandler<TDomainEvent, TUnitOfWork>> asyncEventHandlers =
                 eventHandlerResolver.ResolveEventHandlers<IAsyncUnitOfWorkDomainEventHandler<TDomainEvent, TUnitOfWork>>();
 
-            foreach (IAsyncUnitOfWorkDomainEventHandler<TDomainEvent, TUnitOfWork> eventHandler in eventHandlers)
+            foreach (IAsyncUnitOfWorkDomainEventHandler<TDomainEvent, TUnitOfWork> eventHandler in asyncEventHandlers)
             {
-                await eventHandler.ExecuteAsync(domainEvent, unitOfWork);
+                await eventHandler.ExecuteAsync(domainEvent, unitOfWork).ConfigureAwait(false);
             }
         }
     }

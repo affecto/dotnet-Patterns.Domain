@@ -43,10 +43,10 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// <param name="aggregateRoot">The changed aggregate root instance.</param>
         public override async Task ApplyChangesAsync(TAggregate aggregateRoot)
         {
-            await base.ApplyChangesAsync(aggregateRoot);
+            await base.ApplyChangesAsync(aggregateRoot).ConfigureAwait(false);
             unitOfWork.SaveChanges();
 
-            await ExecuteAppliedEventsAsync(aggregateRoot, immediateEventBroker);
+            await ExecuteAppliedEventsAsync(aggregateRoot, immediateEventBroker).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -58,12 +58,12 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         {
             IList<TAggregate> aggregates = aggregateRoots as IList<TAggregate> ?? aggregateRoots.ToList();
 
-            await base.ApplyChangesAsync(aggregates);
+            await base.ApplyChangesAsync(aggregates).ConfigureAwait(false);
             unitOfWork.SaveChanges();
 
             foreach (TAggregate aggregateRoot in aggregates)
             {
-                await ExecuteAppliedEventsAsync(aggregateRoot, immediateEventBroker);
+                await ExecuteAppliedEventsAsync(aggregateRoot, immediateEventBroker).ConfigureAwait(false);
             }
         }
     }

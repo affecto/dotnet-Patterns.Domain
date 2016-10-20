@@ -7,6 +7,6 @@
     <description>$description$</description>
     <projectUrl>https://github.com/affecto/dotnet-Patterns.Domain</projectUrl>
     <tags>affecto pattern patterns domain driven design ddd aggregate root domain event</tags>
-    <releaseNotes>Fixed asynchronous version of domain event broker's publish method.</releaseNotes>
+    <releaseNotes>Event broker publishes events to both synchronous and asynchronous event handlers regardless of the type of the call.</releaseNotes>
   </metadata>
 </package>

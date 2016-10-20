@@ -34,7 +34,7 @@ namespace Affecto.Patterns.Domain
                 throw new ArgumentNullException("event");
             }
 
-            await PublishAsync((dynamic) @event);
+            await PublishAsync((dynamic) @event).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Affecto.Patterns.Domain
                     throw new ArgumentNullException("events", "Event list cannot contain null events.");
                 }
 
-                await PublishAsync((dynamic) domainEvent);
+                await PublishAsync((dynamic) domainEvent).ConfigureAwait(false);
             }
         }
 
