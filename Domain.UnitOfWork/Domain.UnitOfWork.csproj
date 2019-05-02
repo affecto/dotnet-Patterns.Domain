@@ -14,13 +14,6 @@
     <PackageTags>affecto pattern patterns domain driven design ddd aggregate root domain event unit of work</PackageTags>
     <PackageReleaseNotes>.NET Standard support</PackageReleaseNotes>
   </PropertyGroup>
- 
-  <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
-    <None Include="Domain.UnitOfWork.nuspec">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj">
