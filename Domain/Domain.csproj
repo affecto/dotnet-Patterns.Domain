@@ -1,77 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
-    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{00034256-074E-4BAE-B0A9-CAF2EB76BE21}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup> 
     <RootNamespace>Affecto.Patterns.Domain</RootNamespace>
-    <AssemblyName>Affecto.Patterns.Domain</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <AssemblyName>Affecto.Patterns.Domain</AssemblyName>    
+    <TargetFramework>netstandard2.0</TargetFramework>    
+    <Version>5.0.0</Version>    
+    <Description>Interfaces and base implementation for the domain-driven design pattern, including aggregate roots, domain repositories and domain events.</Description>    
+    <Company>CGI</Company>    
+    <Authors>CGI</Authors>    
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>    
+    <PackageProjectUrl>https://github.com/affecto/dotnet-Patterns.Domain</PackageProjectUrl>    
+    <PackageTags>affecto pattern patterns domain driven design ddd aggregate root domain event</PackageTags>    
+    <PackageReleaseNotes>.NET Standard support</PackageReleaseNotes>    
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
-    <None Include="Domain.nuspec">
-      <SubType>Designer</SubType>
-    </None>
+    <PackageReference Include="Microsoft.CSharp" Version="4.0.1" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AggregateRoot.cs" />
-    <Compile Include="AsyncDomainRepositoryBase.cs" />
-    <Compile Include="DomainEvent.cs" />
-    <Compile Include="DomainEventBroker.cs" />
-    <Compile Include="DomainEventHandlerResolver.cs" />
-    <Compile Include="AsyncDomainRepository.cs" />
-    <Compile Include="DomainRepository.cs" />
-    <Compile Include="DomainRepositoryBase.cs" />
-    <Compile Include="DomainEventBrokerBase.cs" />
-    <Compile Include="IAsyncDomainEventHandler.cs" />
-    <Compile Include="IAsyncDomainRepository.cs" />
-    <Compile Include="IDomainEvent.cs" />
-    <Compile Include="IDomainEventBroker.cs" />
-    <Compile Include="IDomainEventHandler.cs" />
-    <Compile Include="IDomainEventHandlerResolver.cs" />
-    <Compile Include="IDomainRepository.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+ 
 </Project>

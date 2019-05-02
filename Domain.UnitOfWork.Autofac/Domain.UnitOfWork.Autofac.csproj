@@ -1,81 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
-    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CBBB4E22-DF82-441A-B6DD-975CF7EDED4C}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Affecto.Patterns.Domain.UnitOfWork.Autofac</RootNamespace>
     <AssemblyName>Affecto.Patterns.Domain.UnitOfWork.Autofac</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>5.0.0</Version>
+    <Description>Autofac implementation for the domain event handler resolver defined in Affecto.Patterns.Domain.UnitOfWork NuGet.</Description>
+    <Authors>CGI</Authors>
+    <Company>CGI</Company>
+    <Product>Affecto.Patterns.Domain</Product>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/affecto/dotnet-Patterns.Domain</PackageProjectUrl>
+    <PackageTags>affecto pattern patterns domain driven design ddd aggregate root domain event unit of work autofac</PackageTags>
+    <PackageReleaseNotes>.NET Standard support</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ContainerUnitOfWorkDomainEventHandlerResolver.cs" />
-    <Compile Include="UnitOfWorkDomainModule.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Domain.UnitOfWork.Autofac.nuspec">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="packages.config" />
+    <PackageReference Include="Autofac" Version="4.9.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Domain.Autofac\Domain.Autofac.csproj">
-      <Project>{D6142CDE-7FAF-45CA-BC68-5C66D0711F2E}</Project>
-      <Name>Domain.Autofac</Name>
     </ProjectReference>
     <ProjectReference Include="..\Domain.UnitOfWork\Domain.UnitOfWork.csproj">
-      <Project>{F57F2688-2BBC-4AEB-95CA-D7B888AFAC92}</Project>
-      <Name>Domain.UnitOfWork</Name>
     </ProjectReference>
     <ProjectReference Include="..\Domain\Domain.csproj">
-      <Project>{00034256-074E-4BAE-B0A9-CAF2EB76BE21}</Project>
-      <Name>Domain</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  
 </Project>
