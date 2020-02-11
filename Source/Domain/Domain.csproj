@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup> 
+    <RootNamespace>Affecto.Patterns.Domain</RootNamespace>
+    <AssemblyName>Affecto.Patterns.Domain</AssemblyName>    
+    <TargetFramework>netstandard2.0</TargetFramework>    
+    <Version>5.0.0</Version>    
+    <Description>Interfaces and base implementation for the domain-driven design pattern, including aggregate roots, domain repositories and domain events.</Description>    
+    <Company>CGI</Company>    
+    <Authors>CGI</Authors>    
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>    
+    <PackageProjectUrl>https://github.com/affecto/dotnet-Patterns.Domain</PackageProjectUrl>    
+    <PackageTags>affecto pattern patterns domain driven design ddd aggregate root domain event</PackageTags>    
+    <PackageReleaseNotes>.NET Standard support</PackageReleaseNotes>    
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.0.1" />
+  </ItemGroup>
+ 
+</Project>
