@@ -27,7 +27,7 @@ namespace Affecto.Patterns.Domain.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public void NullAggregatesThrowsException()
         {
-            sut.ApplyChanges((IEnumerable<TestAggregateRoot>) null);
+            sut.ApplyChanges((IReadOnlyCollection<TestAggregateRoot>) null);
         }
 
         [TestMethod]
@@ -76,7 +76,7 @@ namespace Affecto.Patterns.Domain.Tests
         private static DomainEvent ApplyNewEvent(TestAggregateRoot aggregateRoot)
         {
             var domainEvent = new TestDomainEvent(Guid.NewGuid());
-            aggregateRoot.ApplyEvent(domainEvent);
+            aggregateRoot.AddEvent(domainEvent);
             return domainEvent;
         }
     }

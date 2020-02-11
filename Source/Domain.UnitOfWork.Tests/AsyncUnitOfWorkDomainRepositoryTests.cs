@@ -76,14 +76,24 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
         [ExpectedAggregateException(typeof(ArgumentNullException))]
         public void NullAggregatesThrowsException()
         {
-            sut.ApplyChangesAsync((IEnumerable<TestAggregateRoot>) null).Wait();
+            sut.ApplyChangesAsync((IReadOnlyCollection<TestAggregateRoot>) null).Wait();
+        }
+
+        [TestMethod]
+        [ExpectedAggregateException(typeof(ArgumentNullException))]
+        public void SomeOfAggregatesNullThrowsException()
+        {
+            TestAggregateRoot aggregateRoot1 = new TestAggregateRoot(Guid.NewGuid());
+            TestAggregateRoot aggregateRoot2 = new TestAggregateRoot(Guid.NewGuid());
+
+            sut.ApplyChangesAsync(new List<TestAggregateRoot> { aggregateRoot1, null, aggregateRoot2 }).Wait();
         }
 
         [TestMethod]
         public void ResolvedUnitOfWorkEventHandlersAreExecutedInCorrectOrder()
         {
             TestAggregateRoot aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
-            aggregateRoot.ApplyEvent(domainEvent);
+            aggregateRoot.AddEvent(domainEvent);
 
             sut.ApplyChangesAsync(aggregateRoot).Wait();
 
@@ -95,7 +105,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
         public void ResolvedEventHandlersAreExecutedInCorrectOrder()
         {
             TestAggregateRoot aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
-            aggregateRoot.ApplyEvent(domainEvent);
+            aggregateRoot.AddEvent(domainEvent);
 
             sut.ApplyChangesAsync(aggregateRoot).Wait();
 
@@ -112,7 +122,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
         public void ChangesInUnitOfWorkAreSaved()
         {
             TestAggregateRoot aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
-            aggregateRoot.ApplyEvent(domainEvent);
+            aggregateRoot.AddEvent(domainEvent);
 
             sut.ApplyChangesAsync(aggregateRoot).Wait();
 
@@ -123,13 +133,13 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
         public void MultipleChangesInUnitOfWorkAreSavedOnce()
         {
             TestAggregateRoot aggregateRoot1 = new TestAggregateRoot(Guid.NewGuid());
-            aggregateRoot1.ApplyEvent(domainEvent);
+            aggregateRoot1.AddEvent(domainEvent);
 
             TestDomainEvent domainEvent2 = new TestDomainEvent(Guid.NewGuid());
             unitOfWorkEventHandlerResolver.ResolveEventHandlers<IAsyncUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>>().Returns(unitOfWorkDomainEventHandlers);
 
             TestAggregateRoot aggregateRoot2 = new TestAggregateRoot(Guid.NewGuid());
-            aggregateRoot2.ApplyEvent(domainEvent2);
+            aggregateRoot2.AddEvent(domainEvent2);
 
             sut.ApplyChangesAsync(new List<TestAggregateRoot> { aggregateRoot1, aggregateRoot2 }).Wait();
 
@@ -145,7 +155,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
         public void OnlyUnitOfWorkEventsAreHandledIfCommitFails()
         {
             TestAggregateRoot aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
-            aggregateRoot.ApplyEvent(domainEvent);
+            aggregateRoot.AddEvent(domainEvent);
 
             unitOfWork
                 .When(u => u.SaveChanges())

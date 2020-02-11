@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Affecto.Patterns.Domain.UnitOfWork
 {
@@ -63,21 +64,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// <param name="aggregateWithSecondProcessedEvents">The changed aggregate root instance whose domain events will be executed second.</param>
         public void ApplyChanges(TAggregateRoot1 aggregateWithFirstProcessedEvents, TAggregateRoot2 aggregateWithSecondProcessedEvents)
         {
-            if (aggregateWithFirstProcessedEvents == null)
-            {
-                throw new ArgumentNullException(nameof(aggregateWithFirstProcessedEvents));
-            }
-            if (aggregateWithSecondProcessedEvents == null)
-            {
-                throw new ArgumentNullException(nameof(aggregateWithSecondProcessedEvents));
-            }
-
-            unitOfWorkDomainEventBroker.PublishEvents(aggregateWithFirstProcessedEvents.GetAppliedEvents());
-            unitOfWorkDomainEventBroker.PublishEvents(aggregateWithSecondProcessedEvents.GetAppliedEvents());
-            unitOfWork.SaveChanges();
-
-            immediateEventBroker.PublishEvents(aggregateWithFirstProcessedEvents.GetAppliedEvents());
-            immediateEventBroker.PublishEvents(aggregateWithSecondProcessedEvents.GetAppliedEvents());
+            ApplyChangesToOrderedAggregates(aggregateWithFirstProcessedEvents, aggregateWithSecondProcessedEvents);
         }
 
         /// <summary>
@@ -88,21 +75,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// <param name="aggregateWithSecondProcessedEvents">The changed aggregate root instance whose domain events will be executed second.</param>
         public void ApplyChanges(TAggregateRoot2 aggregateWithFirstProcessedEvents, TAggregateRoot1 aggregateWithSecondProcessedEvents)
         {
-            if (aggregateWithFirstProcessedEvents == null)
-            {
-                throw new ArgumentNullException(nameof(aggregateWithFirstProcessedEvents));
-            }
-            if (aggregateWithSecondProcessedEvents == null)
-            {
-                throw new ArgumentNullException(nameof(aggregateWithSecondProcessedEvents));
-            }
-
-            unitOfWorkDomainEventBroker.PublishEvents(aggregateWithFirstProcessedEvents.GetAppliedEvents());
-            unitOfWorkDomainEventBroker.PublishEvents(aggregateWithSecondProcessedEvents.GetAppliedEvents());
-            unitOfWork.SaveChanges();
-
-            immediateEventBroker.PublishEvents(aggregateWithFirstProcessedEvents.GetAppliedEvents());
-            immediateEventBroker.PublishEvents(aggregateWithSecondProcessedEvents.GetAppliedEvents());
+            ApplyChangesToOrderedAggregates(aggregateWithFirstProcessedEvents, aggregateWithSecondProcessedEvents);
         }
 
         /// <summary>
@@ -118,5 +91,35 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// <param name="id">Aggregate root instance id.</param>
         /// <returns>Aggregate root instance.</returns>
         protected abstract TAggregateRoot2 FindAggregateRootOfSecondSpecifiedType(Guid id);
+
+        /// <summary>
+        /// Executes all unit-of-work events that have been applied to the given aggregate root instances, then commits the unit of work.
+        /// After a successful commit all other domain events are executed.
+        /// </summary>
+        /// <param name="aggregateWithFirstProcessedEvents">The changed aggregate root instance whose domain events will be executed first.</param>
+        /// <param name="aggregateWithSecondProcessedEvents">The changed aggregate root instance whose domain events will be executed second.</param>
+        private void ApplyChangesToOrderedAggregates<TAggregate1, TAggregate2>(TAggregate1 aggregateWithFirstProcessedEvents, TAggregate2 aggregateWithSecondProcessedEvents)
+            where TAggregate1 : AggregateRoot
+            where TAggregate2 : AggregateRoot
+        {
+            if (aggregateWithFirstProcessedEvents == null)
+            {
+                throw new ArgumentNullException(nameof(aggregateWithFirstProcessedEvents));
+            }
+            if (aggregateWithSecondProcessedEvents == null)
+            {
+                throw new ArgumentNullException(nameof(aggregateWithSecondProcessedEvents));
+            }
+
+            IReadOnlyCollection<IDomainEvent> firstAggregatesEvents = aggregateWithFirstProcessedEvents.DequeuePendingEvents();
+            IReadOnlyCollection<IDomainEvent> secondAggregatesEvents = aggregateWithSecondProcessedEvents.DequeuePendingEvents();
+
+            unitOfWorkDomainEventBroker.PublishEvents(firstAggregatesEvents);
+            unitOfWorkDomainEventBroker.PublishEvents(secondAggregatesEvents);
+            unitOfWork.SaveChanges();
+
+            immediateEventBroker.PublishEvents(firstAggregatesEvents);
+            immediateEventBroker.PublishEvents(secondAggregatesEvents);
+        }
     }
 }

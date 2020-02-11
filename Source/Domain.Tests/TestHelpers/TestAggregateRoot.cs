@@ -9,9 +9,9 @@ namespace Affecto.Patterns.Domain.Tests.TestHelpers
         {
         }
 
-        public new void ApplyEvent(DomainEvent @event)
+        public new void AddEvent(DomainEvent @event)
         {
-            base.ApplyEvent(@event);
+            base.AddEvent(@event);
         }
     }
 }

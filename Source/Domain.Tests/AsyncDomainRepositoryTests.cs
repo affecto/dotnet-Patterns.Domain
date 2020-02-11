@@ -46,7 +46,7 @@ namespace Affecto.Patterns.Domain.Tests
         public void ResolvedEventHandlersAreExecutedInCorrectOrder()
         {
             TestAggregateRoot aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
-            aggregateRoot.ApplyEvent(domainEvent);
+            aggregateRoot.AddEvent(domainEvent);
 
             sut.ApplyChangesAsync(aggregateRoot).Wait();
 
@@ -64,7 +64,7 @@ namespace Affecto.Patterns.Domain.Tests
             // See the bug in .NET Framework: https://connect.microsoft.com/VisualStudio/feedback/details/672411/bug-in-dynamic-dispatch-when-using-generic-type-parameters
 
             InternalAggregateRoot aggregateRoot = new InternalAggregateRoot(Guid.NewGuid());
-            aggregateRoot.ApplyEvent(domainEvent);
+            aggregateRoot.AddEvent(domainEvent);
 
             var privateSut = new InternalAsyncDomainRepository(eventHandlerResolver);
             privateSut.ApplyChangesAsync(aggregateRoot).Wait();

@@ -27,6 +27,6 @@ namespace Affecto.Patterns.Domain
         /// Asynchronously executes all events that have been applied to the given set of aggregate root instances.
         /// </summary>
         /// <param name="aggregateRoots">The changed aggregate root instances.</param>
-        Task ApplyChangesAsync(IEnumerable<TAggregate> aggregateRoots);
+        Task ApplyChangesAsync(IReadOnlyCollection<TAggregate> aggregateRoots);
     }
 }

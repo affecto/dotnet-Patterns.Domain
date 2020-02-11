@@ -38,10 +38,17 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// <param name="aggregateRoot">The changed aggregate root instance.</param>
         public override async Task ApplyChangesAsync(TAggregate aggregateRoot)
         {
-            await base.ApplyChangesAsync(aggregateRoot).ConfigureAwait(false);
+            if (aggregateRoot == null)
+            {
+                throw new ArgumentNullException(nameof(aggregateRoot));
+            }
+
+            IReadOnlyCollection<IDomainEvent> pendingEvents = aggregateRoot.DequeuePendingEvents();
+
+            await PublishPendingEventsAsync(pendingEvents, domainEventBroker).ConfigureAwait(false);
             unitOfWork.SaveChanges();
 
-            await ExecuteAppliedEventsAsync(aggregateRoot, immediateEventBroker).ConfigureAwait(false);
+            await PublishPendingEventsAsync(pendingEvents, immediateEventBroker).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -49,17 +56,30 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// After a successful commit all other domain events are executed.
         /// </summary>
         /// <param name="aggregateRoots">The changed aggregate root instances.</param>
-        public override async Task ApplyChangesAsync(IEnumerable<TAggregate> aggregateRoots)
+        public override async Task ApplyChangesAsync(IReadOnlyCollection<TAggregate> aggregateRoots)
         {
-            IList<TAggregate> aggregates = aggregateRoots as IList<TAggregate> ?? aggregateRoots.ToList();
+            if (aggregateRoots == null)
+            {
+                throw new ArgumentNullException(nameof(aggregateRoots));
+            }
 
-            await base.ApplyChangesAsync(aggregates).ConfigureAwait(false);
+            if (aggregateRoots.Any(a => a == null))
+            {
+                throw new ArgumentNullException(nameof(aggregateRoots), "Aggregate root list cannot contain null values.");
+            }
+
+            var allEvents = new List<IDomainEvent>();
+
+            foreach (TAggregate aggregateRoot in aggregateRoots)
+            {
+                IReadOnlyCollection<IDomainEvent> pendingEvents = aggregateRoot.DequeuePendingEvents();
+                await PublishPendingEventsAsync(pendingEvents, domainEventBroker).ConfigureAwait(false);
+                allEvents.AddRange(pendingEvents);
+            }
+
             unitOfWork.SaveChanges();
 
-            foreach (TAggregate aggregateRoot in aggregates)
-            {
-                await ExecuteAppliedEventsAsync(aggregateRoot, immediateEventBroker).ConfigureAwait(false);
-            }
+            await PublishPendingEventsAsync(allEvents, immediateEventBroker).ConfigureAwait(false);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Affecto.Patterns.Domain
@@ -28,23 +29,33 @@ namespace Affecto.Patterns.Domain
         /// <param name="aggregateRoot">The changed aggregate root instance.</param>
         public virtual async Task ApplyChangesAsync(TAggregate aggregateRoot)
         {
-            await ExecuteAppliedEventsAsync(aggregateRoot, domainEventBroker).ConfigureAwait(false);
+            if (aggregateRoot == null)
+            {
+                throw new ArgumentNullException(nameof(aggregateRoot));
+            }
+
+            await PublishPendingEventsAsync(aggregateRoot.DequeuePendingEvents(), domainEventBroker).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Asynchronously executes all events that have been applied to the given set of aggregate root instances.
         /// </summary>
         /// <param name="aggregateRoots">The changed aggregate root instances.</param>
-        public virtual async Task ApplyChangesAsync(IEnumerable<TAggregate> aggregateRoots)
+        public virtual async Task ApplyChangesAsync(IReadOnlyCollection<TAggregate> aggregateRoots)
         {
             if (aggregateRoots == null)
             {
                 throw new ArgumentNullException(nameof(aggregateRoots));
             }
 
+            if (aggregateRoots.Any(a => a == null))
+            {
+                throw new ArgumentNullException(nameof(aggregateRoots), "Aggregate root list cannot contain null values.");
+            }
+
             foreach (TAggregate aggregateRoot in aggregateRoots)
             {
-                await ExecuteAppliedEventsAsync(aggregateRoot, domainEventBroker).ConfigureAwait(false);
+                await PublishPendingEventsAsync(aggregateRoot.DequeuePendingEvents(), domainEventBroker).ConfigureAwait(false);
             }
         }
 
@@ -58,16 +69,11 @@ namespace Affecto.Patterns.Domain
         /// <summary>
         /// Asynchronously executes all events that have been applied to the given aggregate root instance.
         /// </summary>
-        /// <param name="aggregateRoot">The changed aggregate root instance.</param>
+        /// <param name="pendingEvents">A list of events pending for publishing.</param>
         /// <param name="eventBroker">The event broker to be used for publishing events.</param>
-        protected static async Task ExecuteAppliedEventsAsync(TAggregate aggregateRoot, DomainEventBrokerBase eventBroker)
+        protected static async Task PublishPendingEventsAsync(IEnumerable<IDomainEvent> pendingEvents, DomainEventBrokerBase eventBroker)
         {
-            if (aggregateRoot == null)
-            {
-                throw new ArgumentNullException(nameof(aggregateRoot));
-            }
-
-            await eventBroker.PublishEventsAsync(aggregateRoot.GetAppliedEvents()).ConfigureAwait(false);
+            await eventBroker.PublishEventsAsync(pendingEvents).ConfigureAwait(false);
         }
     }
 }

@@ -26,6 +26,6 @@ namespace Affecto.Patterns.Domain
         /// Executes all events that have been applied to the given set of aggregate root instances.
         /// </summary>
         /// <param name="aggregateRoots">The changed aggregate root instances.</param>
-        void ApplyChanges(IEnumerable<TAggregate> aggregateRoots);
+        void ApplyChanges(IReadOnlyCollection<TAggregate> aggregateRoots);
     }
 }

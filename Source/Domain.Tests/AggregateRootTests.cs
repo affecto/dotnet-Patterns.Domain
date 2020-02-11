@@ -48,33 +48,33 @@ namespace Affecto.Patterns.Domain.Tests
         }
 
         [TestMethod]
-        public void AppliedEventsIsEmpty()
+        public void PendingEventsIsEmpty()
         {
-            IEnumerable<IDomainEvent> appliedEvents = sut.GetAppliedEvents();
+            IEnumerable<IDomainEvent> appliedEvents = sut.DequeuePendingEvents();
 
             Assert.IsFalse(appliedEvents.Any());
         }
 
         [TestMethod]
-        public void AppliedEventIsReturned()
+        public void PendingEventIsReturned()
         {
             var domainEvent = new TestDomainEvent(Guid.NewGuid());
-            sut.ApplyEvent(domainEvent);
-            IEnumerable<IDomainEvent> appliedEvents = sut.GetAppliedEvents();
+            sut.AddEvent(domainEvent);
+            IEnumerable<IDomainEvent> appliedEvents = sut.DequeuePendingEvents();
 
             Assert.AreEqual(1, appliedEvents.Count());
             Assert.AreSame(domainEvent, appliedEvents.Single());
         }
 
         [TestMethod]
-        public void AppliedEventsAreReturnedInAppliedOrder()
+        public void PendingEventsAreReturnedInAppliedOrder()
         {
             var domainEvent1 = new TestDomainEvent(Guid.NewGuid());
             var domainEvent2 = new TestDomainEvent(Guid.NewGuid());
-            sut.ApplyEvent(domainEvent2);
-            sut.ApplyEvent(domainEvent1);
+            sut.AddEvent(domainEvent2);
+            sut.AddEvent(domainEvent1);
 
-            IEnumerable<IDomainEvent> appliedEvents = sut.GetAppliedEvents();
+            IEnumerable<IDomainEvent> appliedEvents = sut.DequeuePendingEvents();
 
             Assert.AreEqual(2, appliedEvents.Count());
             Assert.AreSame(domainEvent2, appliedEvents.ElementAt(0));
@@ -88,8 +88,8 @@ namespace Affecto.Patterns.Domain.Tests
 
             var domainEvent1 = new TestDomainEvent(Guid.NewGuid(), 1);
             var domainEvent2 = new TestDomainEvent(Guid.NewGuid(), 2);
-            sut.ApplyEvent(domainEvent2);
-            sut.ApplyEvent(domainEvent1);
+            sut.AddEvent(domainEvent2);
+            sut.AddEvent(domainEvent1);
 
             sut.SetVersion(expectedVersion);
 
@@ -106,8 +106,8 @@ namespace Affecto.Patterns.Domain.Tests
 
             var domainEvent1 = new TestDomainEvent(Guid.NewGuid(), 1);
             var domainEvent2 = new TestDomainEvent(Guid.NewGuid(), 2);
-            sut.ApplyEvent(domainEvent2);
-            sut.ApplyEvent(domainEvent1);
+            sut.AddEvent(domainEvent2);
+            sut.AddEvent(domainEvent1);
 
             Assert.AreEqual(expectedVersion, domainEvent1.EntityVersion);
             Assert.AreEqual(expectedVersion, domainEvent2.EntityVersion);

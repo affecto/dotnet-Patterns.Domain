@@ -37,10 +37,17 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// <param name="aggregateRoot">The changed aggregate root instance.</param>
         public override void ApplyChanges(TAggregate aggregateRoot)
         {
-            base.ApplyChanges(aggregateRoot);
+            if (aggregateRoot == null)
+            {
+                throw new ArgumentNullException(nameof(aggregateRoot));
+            }
+
+            IReadOnlyCollection<IDomainEvent> pendingEvents = aggregateRoot.DequeuePendingEvents();
+
+            PublishPendingEvents(pendingEvents, domainEventBroker);
             unitOfWork.SaveChanges();
 
-            ExecuteAppliedEvents(aggregateRoot, immediateEventBroker);
+            PublishPendingEvents(pendingEvents, immediateEventBroker);
         }
 
         /// <summary>
@@ -48,17 +55,30 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// After a successful commit all other domain events are executed.
         /// </summary>
         /// <param name="aggregateRoots">The changed aggregate root instances.</param>
-        public override void ApplyChanges(IEnumerable<TAggregate> aggregateRoots)
+        public override void ApplyChanges(IReadOnlyCollection<TAggregate> aggregateRoots)
         {
-            IList<TAggregate> aggregates = aggregateRoots as IList<TAggregate> ?? aggregateRoots.ToList();
+            if (aggregateRoots == null)
+            {
+                throw new ArgumentNullException(nameof(aggregateRoots));
+            }
 
-            base.ApplyChanges(aggregates);
+            if (aggregateRoots.Any(a => a == null))
+            {
+                throw new ArgumentNullException(nameof(aggregateRoots), "Aggregate root list cannot contain null values.");
+            }
+
+            var allEvents = new List<IDomainEvent>();
+
+            foreach (TAggregate aggregateRoot in aggregateRoots)
+            {
+                IReadOnlyCollection<IDomainEvent> pendingEvents = aggregateRoot.DequeuePendingEvents();
+                PublishPendingEvents(pendingEvents, domainEventBroker);
+                allEvents.AddRange(pendingEvents);
+            }
+
             unitOfWork.SaveChanges();
 
-            foreach (TAggregate aggregateRoot in aggregates)
-            {
-                ExecuteAppliedEvents(aggregateRoot, immediateEventBroker);
-            }
+            PublishPendingEvents(allEvents, immediateEventBroker);
         }
     }
 }

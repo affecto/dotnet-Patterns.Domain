@@ -28,7 +28,17 @@ namespace Affecto.Patterns.Domain.Tests
         [ExpectedAggregateException(typeof(ArgumentNullException))]
         public void NullAggregatesThrowsException()
         {
-            sut.ApplyChangesAsync((IEnumerable<TestAggregateRoot>) null).Wait();
+            sut.ApplyChangesAsync((IReadOnlyCollection<TestAggregateRoot>) null).Wait();
+        }
+
+        [TestMethod]
+        [ExpectedAggregateException(typeof(ArgumentNullException))]
+        public void SomeOfAggregatesNullThrowsException()
+        {
+            TestAggregateRoot aggregateRoot1 = new TestAggregateRoot(Guid.NewGuid());
+            TestAggregateRoot aggregateRoot2 = new TestAggregateRoot(Guid.NewGuid());
+
+            sut.ApplyChangesAsync(new List<TestAggregateRoot> { aggregateRoot1, null, aggregateRoot2 }).Wait();
         }
 
         [TestMethod]
@@ -77,7 +87,7 @@ namespace Affecto.Patterns.Domain.Tests
         private static DomainEvent ApplyNewEvent(TestAggregateRoot aggregateRoot)
         {
             var domainEvent = new TestDomainEvent(Guid.NewGuid());
-            aggregateRoot.ApplyEvent(domainEvent);
+            aggregateRoot.AddEvent(domainEvent);
             return domainEvent;
         }
     }

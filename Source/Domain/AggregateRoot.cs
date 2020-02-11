@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Affecto.Patterns.Domain
 {
@@ -8,7 +9,7 @@ namespace Affecto.Patterns.Domain
     /// </summary>
     public abstract class AggregateRoot
     {
-        private readonly List<DomainEvent> appliedEvents;
+        private readonly List<DomainEvent> pendingEvents;
 
         /// <summary>
         /// Gets the aggregate root instance id.
@@ -27,14 +28,14 @@ namespace Affecto.Patterns.Domain
         /// <param name="version">Aggregate root instance version.</param>
         protected AggregateRoot(Guid id, long version)
         {
-            if (id == default(Guid))
+            if (id == default)
             {
                 throw new ArgumentException("Id must be defined.", nameof(id));
             }
 
             Id = id;
             Version = version;
-            appliedEvents = new List<DomainEvent>();
+            pendingEvents = new List<DomainEvent>();
         }
 
         /// <summary>
@@ -47,12 +48,15 @@ namespace Affecto.Patterns.Domain
         }
 
         /// <summary>
-        /// Gets all domain events that have been applied to the aggregate root instance.
+        /// Returns all domain events that are pending for publishing and dequeues them.
         /// </summary>
         /// <returns>A collection of domain events.</returns>
-        public virtual IEnumerable<IDomainEvent> GetAppliedEvents()
+        public IReadOnlyCollection<IDomainEvent> DequeuePendingEvents()
         {
-            return appliedEvents;
+            List<DomainEvent> events = pendingEvents.ToList();
+
+            pendingEvents.Clear();
+            return events;
         }
 
         /// <summary>
@@ -63,20 +67,25 @@ namespace Affecto.Patterns.Domain
         {
             Version = version;
 
-            foreach (DomainEvent @event in appliedEvents)
+            foreach (DomainEvent @event in pendingEvents)
             {
                 @event.EntityVersion = version;
             }
         }
         
         /// <summary>
-        /// Applies a new domain event to the aggregate root instance.
+        /// Adds a new event to the list of pending events for this aggregate root.
         /// </summary>
-        /// <param name="domainEvent">The new domain event to apply.</param>
-        protected void ApplyEvent(DomainEvent domainEvent)
+        /// <param name="domainEvent">The new domain event to add.</param>
+        protected void AddEvent(DomainEvent domainEvent)
         {
+            if (domainEvent == null)
+            {
+                throw new ArgumentNullException(nameof(domainEvent));
+            }
+
             domainEvent.EntityVersion = Version;
-            appliedEvents.Add(domainEvent);
+            pendingEvents.Add(domainEvent);
         }
     }
 }

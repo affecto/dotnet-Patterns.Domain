@@ -121,10 +121,10 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
         public void ResolvedEventHandlersAreExecutedInCorrectOrder()
         {
             TestAggregateRoot aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
-            aggregateRoot.ApplyEvent(domainEvent1);
+            aggregateRoot.AddEvent(domainEvent1);
 
             TestAggregateRoot2 aggregateRoot2 = new TestAggregateRoot2(Guid.NewGuid());
-            aggregateRoot.ApplyEvent(domainEvent2);
+            aggregateRoot.AddEvent(domainEvent2);
 
             sut.ApplyChanges(aggregateRoot, aggregateRoot2);
 
@@ -146,10 +146,10 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
         public void ChangesInUnitOfWorkAreSavedOnce()
         {
             TestAggregateRoot aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
-            aggregateRoot.ApplyEvent(domainEvent1);
+            aggregateRoot.AddEvent(domainEvent1);
 
             TestAggregateRoot2 aggregateRoot2 = new TestAggregateRoot2(Guid.NewGuid());
-            aggregateRoot.ApplyEvent(domainEvent2);
+            aggregateRoot.AddEvent(domainEvent2);
 
             sut.ApplyChanges(aggregateRoot, aggregateRoot2);
 
@@ -174,10 +174,10 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
             unitOfWorkEventHandlerResolver.ResolveEventHandlers<IUnitOfWorkDomainEventHandler<TestDomainEvent, InternalUnitOfWork>>().Returns(eventHandlers);
 
             InternalAggregateRoot aggregateRoot = new InternalAggregateRoot(Guid.NewGuid());
-            aggregateRoot.ApplyEvent(domainEvent1);
+            aggregateRoot.AddEvent(domainEvent1);
 
             TestAggregateRoot2 aggregateRoot2 = new TestAggregateRoot2(Guid.NewGuid());
-            aggregateRoot.ApplyEvent(domainEvent2);
+            aggregateRoot.AddEvent(domainEvent2);
 
             InternalUnitOfWork internalUnitOfWork = new InternalUnitOfWork();
 
@@ -196,10 +196,10 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
         public void OnlyUnitOfWorkEventsAreHandledIfCommitFails()
         {
             TestAggregateRoot aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
-            aggregateRoot.ApplyEvent(domainEvent1);
+            aggregateRoot.AddEvent(domainEvent1);
 
             TestAggregateRoot2 aggregateRoot2 = new TestAggregateRoot2(Guid.NewGuid());
-            aggregateRoot.ApplyEvent(domainEvent2);
+            aggregateRoot.AddEvent(domainEvent2);
 
             unitOfWork
                 .When(u => u.SaveChanges())

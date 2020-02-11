@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Affecto.Patterns.Domain
 {
@@ -27,23 +28,33 @@ namespace Affecto.Patterns.Domain
         /// <param name="aggregateRoot">The changed aggregate root instance.</param>
         public virtual void ApplyChanges(TAggregate aggregateRoot)
         {
-            ExecuteAppliedEvents(aggregateRoot, domainEventBroker);
+            if (aggregateRoot == null)
+            {
+                throw new ArgumentNullException(nameof(aggregateRoot));
+            }
+
+            PublishPendingEvents(aggregateRoot.DequeuePendingEvents(), domainEventBroker);
         }
 
         /// <summary>
         /// Executes all events that have been applied to the given set of aggregate root instances.
         /// </summary>
         /// <param name="aggregateRoots">The changed aggregate root instances.</param>
-        public virtual void ApplyChanges(IEnumerable<TAggregate> aggregateRoots)
+        public virtual void ApplyChanges(IReadOnlyCollection<TAggregate> aggregateRoots)
         {
             if (aggregateRoots == null)
             {
                 throw new ArgumentNullException(nameof(aggregateRoots));
             }
 
+            if (aggregateRoots.Any(a => a == null))
+            {
+                throw new ArgumentNullException(nameof(aggregateRoots), "Aggregate root list cannot contain null values.");
+            }
+
             foreach (TAggregate aggregateRoot in aggregateRoots)
             {
-                ExecuteAppliedEvents(aggregateRoot, domainEventBroker);
+                PublishPendingEvents(aggregateRoot.DequeuePendingEvents(), domainEventBroker);
             }
         }
 
@@ -55,18 +66,13 @@ namespace Affecto.Patterns.Domain
         public abstract TAggregate Find(Guid id);
 
         /// <summary>
-        /// Executes all events that have been applied to the given aggregate root instance.
+        /// Publishes all events that have been applied to the given aggregate root instance.
         /// </summary>
-        /// <param name="aggregateRoot">The changed aggregate root instance.</param>
+        /// <param name="pendingEvents">A list of events pending for publishing.</param>
         /// <param name="eventBroker">The event broker to be used for publishing events.</param>
-        protected static void ExecuteAppliedEvents(TAggregate aggregateRoot, DomainEventBrokerBase eventBroker)
+        protected static void PublishPendingEvents(IEnumerable<IDomainEvent> pendingEvents, DomainEventBrokerBase eventBroker)
         {
-            if (aggregateRoot == null)
-            {
-                throw new ArgumentNullException(nameof(aggregateRoot));
-            }
-
-            eventBroker.PublishEvents(aggregateRoot.GetAppliedEvents());
+            eventBroker.PublishEvents(pendingEvents);
         }
     }
 }
