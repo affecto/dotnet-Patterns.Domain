@@ -15,7 +15,7 @@
     <PackageReleaseNotes>.NET Standard support</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.9.1" />
+    <PackageReference Include="Autofac" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Domain.Autofac\Domain.Autofac.csproj">

@@ -14,7 +14,7 @@
     <PackageReleaseNotes>.NET Standard support</PackageReleaseNotes>    
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.0.1" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
   </ItemGroup>
  
 </Project>
