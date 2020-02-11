@@ -1,4 +1,5 @@
 ﻿// ReSharper disable ObjectCreationAsStatement
+// ReSharper disable PossibleNullReferenceException
 
 using System;
 using Affecto.Patterns.Domain.Tests.TestHelpers;
