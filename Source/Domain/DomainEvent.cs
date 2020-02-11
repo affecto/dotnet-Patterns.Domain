@@ -24,7 +24,7 @@ namespace Affecto.Patterns.Domain
         /// <param name="entityVersion">Entity instance version.</param>
         protected DomainEvent(Guid entityId, long entityVersion)
         {
-            if (entityId.Equals(Guid.Empty))
+            if (entityId == default)
             {
                 throw new ArgumentException("Entity id must be defined.", nameof(entityId));
             }
