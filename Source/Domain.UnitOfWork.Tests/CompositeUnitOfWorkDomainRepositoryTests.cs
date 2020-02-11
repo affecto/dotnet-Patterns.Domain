@@ -203,9 +203,9 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
 
             unitOfWork
                 .When(u => u.SaveChanges())
-                .Do(callInfo => { throw new OperationCanceledException(); });
+                .Do(callInfo => throw new OperationCanceledException());
 
-            bool exceptionCatched = false;
+            bool exceptionCaught = false;
 
             try
             {
@@ -213,10 +213,10 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
             }
             catch (OperationCanceledException)
             {
-                exceptionCatched = true;
+                exceptionCaught = true;
             }
 
-            Assert.IsTrue(exceptionCatched);
+            Assert.IsTrue(exceptionCaught);
             unitOfWorkDomainEventHandler1.Received().Execute(domainEvent1, unitOfWork);
             unitOfWorkDomainEventHandler2.Received().Execute(domainEvent1, unitOfWork);
             unitOfWorkDomainEventHandler1.Received().Execute(domainEvent2, unitOfWork);

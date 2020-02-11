@@ -27,18 +27,13 @@ namespace Affecto.Patterns.Domain.UnitOfWork
             IUnitOfWorkDomainEventHandlerResolver unitOfWorkEventHandlerResolver, TUnitOfWork unitOfWork)
             : base(new UnitOfWorkDomainEventBroker<TUnitOfWork>(unitOfWorkEventHandlerResolver, unitOfWork))
         {
-            if (unitOfWork == null)
-            {
-                throw new ArgumentNullException("unitOfWork");
-            }
-
-            this.unitOfWork = unitOfWork;
+            this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             immediateEventBroker = new DomainEventBroker(eventHandlerResolver);
         }
 
         /// <summary>
         /// Asynchronously executes all unit-of-work events that have been applied to the given aggregate root instance, then commits the unit of work.
-        /// After a succesfull commit all other domain events are executed.
+        /// After a successful commit all other domain events are executed.
         /// </summary>
         /// <param name="aggregateRoot">The changed aggregate root instance.</param>
         public override async Task ApplyChangesAsync(TAggregate aggregateRoot)
@@ -51,7 +46,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork
 
         /// <summary>
         /// Asynchronously executes all unit-of-work events that have been applied to the given set of aggregate root instances, then commits the unit of work.
-        /// After a succesfull commit all other domain events are executed.
+        /// After a successful commit all other domain events are executed.
         /// </summary>
         /// <param name="aggregateRoots">The changed aggregate root instances.</param>
         public override async Task ApplyChangesAsync(IEnumerable<TAggregate> aggregateRoots)

@@ -17,12 +17,7 @@ namespace Affecto.Patterns.Domain
         /// <param name="eventHandlers">A collection of domain event handler instances.</param>
         public DomainEventHandlerResolver(IEnumerable<IDomainEventHandler> eventHandlers)
         {
-            if (eventHandlers == null)
-            {
-                throw new ArgumentNullException("eventHandlers");
-            }
-
-            this.eventHandlers = eventHandlers;
+            this.eventHandlers = eventHandlers ?? throw new ArgumentNullException(nameof(eventHandlers));
         }
 
         /// <summary>

@@ -17,12 +17,7 @@ namespace Affecto.Patterns.Domain.Autofac
         /// <param name="componentContext">Autofac component context.</param>
         public ContainerDomainEventHandlerResolver(IComponentContext componentContext)
         {
-            if (componentContext == null)
-            {
-                throw new ArgumentNullException("componentContext");
-            }
-
-            this.componentContext = componentContext;
+            this.componentContext = componentContext ?? throw new ArgumentNullException(nameof(componentContext));
         }
 
         /// <summary>

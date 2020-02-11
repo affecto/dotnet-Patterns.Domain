@@ -13,7 +13,7 @@ namespace Affecto.Patterns.Domain
         /// <summary>
         /// Gets the aggregate root instance id.
         /// </summary>
-        public Guid Id { get; private set; }
+        public Guid Id { get; }
 
         /// <summary>
         /// Gets the aggregate root instance version.
@@ -29,7 +29,7 @@ namespace Affecto.Patterns.Domain
         {
             if (id == default(Guid))
             {
-                throw new ArgumentException("Id must be defined.", "id");
+                throw new ArgumentException("Id must be defined.", nameof(id));
             }
 
             Id = id;

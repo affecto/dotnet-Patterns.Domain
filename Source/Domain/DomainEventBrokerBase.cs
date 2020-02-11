@@ -17,7 +17,7 @@ namespace Affecto.Patterns.Domain
         {
             if (@event == null)
             {
-                throw new ArgumentNullException("event");
+                throw new ArgumentNullException(nameof(@event));
             }
 
             Publish((dynamic) @event);
@@ -31,7 +31,7 @@ namespace Affecto.Patterns.Domain
         {
             if (@event == null)
             {
-                throw new ArgumentNullException("event");
+                throw new ArgumentNullException(nameof(@event));
             }
 
             await PublishAsync((dynamic) @event).ConfigureAwait(false);
@@ -45,14 +45,14 @@ namespace Affecto.Patterns.Domain
         {
             if (events == null)
             {
-                throw new ArgumentNullException("events");
+                throw new ArgumentNullException(nameof(events));
             }
 
             foreach (IDomainEvent domainEvent in events)
             {
                 if (domainEvent == null)
                 {
-                    throw new ArgumentNullException("events", "Event list cannot contain null events.");
+                    throw new ArgumentNullException(nameof(events), "Event list cannot contain null events.");
                 }
 
                 Publish((dynamic) domainEvent);
@@ -67,14 +67,14 @@ namespace Affecto.Patterns.Domain
         {
             if (events == null)
             {
-                throw new ArgumentNullException("events");
+                throw new ArgumentNullException(nameof(events));
             }
 
             foreach (IDomainEvent domainEvent in events)
             {
                 if (domainEvent == null)
                 {
-                    throw new ArgumentNullException("events", "Event list cannot contain null events.");
+                    throw new ArgumentNullException(nameof(events), "Event list cannot contain null events.");
                 }
 
                 await PublishAsync((dynamic) domainEvent).ConfigureAwait(false);

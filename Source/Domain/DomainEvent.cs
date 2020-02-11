@@ -10,7 +10,7 @@ namespace Affecto.Patterns.Domain
         /// <summary>
         /// Gets the entity id.
         /// </summary>
-        public Guid EntityId { get; private set; }
+        public Guid EntityId { get; }
 
         /// <summary>
         /// Gets the entity version.
@@ -26,7 +26,7 @@ namespace Affecto.Patterns.Domain
         {
             if (entityId.Equals(Guid.Empty))
             {
-                throw new ArgumentException("Entity id must be defined.", "entityId");
+                throw new ArgumentException("Entity id must be defined.", nameof(entityId));
             }
 
             EntityId = entityId;

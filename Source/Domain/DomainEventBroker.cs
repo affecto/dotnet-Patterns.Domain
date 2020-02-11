@@ -17,12 +17,7 @@ namespace Affecto.Patterns.Domain
         /// <param name="eventHandlerResolver">Event handler resolver instance for finding domain event handlers.</param>
         public DomainEventBroker(IDomainEventHandlerResolver eventHandlerResolver)
         {
-            if (eventHandlerResolver == null)
-            {
-                throw new ArgumentNullException("eventHandlerResolver");
-            }
-
-            this.eventHandlerResolver = eventHandlerResolver;
+            this.eventHandlerResolver = eventHandlerResolver ?? throw new ArgumentNullException(nameof(eventHandlerResolver));
         }
 
         /// <summary>

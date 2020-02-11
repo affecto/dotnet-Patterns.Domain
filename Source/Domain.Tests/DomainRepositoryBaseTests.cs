@@ -73,7 +73,7 @@ namespace Affecto.Patterns.Domain.Tests
             Assert.IsTrue(sut.EventBroker.ExecutedEvents.Contains(domainEvent4));
         }
 
-        private DomainEvent ApplyNewEvent(TestAggregateRoot aggregateRoot)
+        private static DomainEvent ApplyNewEvent(TestAggregateRoot aggregateRoot)
         {
             var domainEvent = new TestDomainEvent(Guid.NewGuid());
             aggregateRoot.ApplyEvent(domainEvent);

@@ -20,17 +20,8 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// <param name="unitOfWork">The Unit of Work context instance.</param>
         public UnitOfWorkDomainEventBroker(IUnitOfWorkDomainEventHandlerResolver eventHandlerResolver, TUnitOfWork unitOfWork)
         {
-            if (eventHandlerResolver == null)
-            {
-                throw new ArgumentNullException("eventHandlerResolver");
-            }
-            if (unitOfWork == null)
-            {
-                throw new ArgumentNullException("unitOfWork");
-            }
-
-            this.eventHandlerResolver = eventHandlerResolver;
-            this.unitOfWork = unitOfWork;
+            this.eventHandlerResolver = eventHandlerResolver ?? throw new ArgumentNullException(nameof(eventHandlerResolver));
+            this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
         /// <summary>

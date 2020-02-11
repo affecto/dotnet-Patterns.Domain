@@ -9,8 +9,8 @@ namespace Affecto.Patterns.Domain.Tests.Infrastructure
     [AttributeUsage(AttributeTargets.Method)]
     public class ExpectedInnerExceptionAttribute : ExpectedExceptionBaseAttribute
     {
-        public Type ExceptionType { get; private set; }
-        public Type InnerExceptionType { get; private set; }
+        public Type ExceptionType { get; }
+        public Type InnerExceptionType { get; }
 
         /// <param name="exceptionType">An expected type of exception to be thrown by a method.</param>
         /// <param name="innerExceptionType">An expected type of inner exception to be thrown by a method.</param>
@@ -18,19 +18,19 @@ namespace Affecto.Patterns.Domain.Tests.Infrastructure
         {
             if (exceptionType == null)
             {
-                throw new ArgumentNullException("exceptionType");
+                throw new ArgumentNullException(nameof(exceptionType));
             }
             if (innerExceptionType == null)
             {
-                throw new ArgumentNullException("innerExceptionType");
+                throw new ArgumentNullException(nameof(innerExceptionType));
             }
             if (!typeof(Exception).IsAssignableFrom(exceptionType))
             {
-                throw new ArgumentException("Expected exception type must derive from exception.", "exceptionType");
+                throw new ArgumentException("Expected exception type must derive from exception.", nameof(exceptionType));
             }
             if (!typeof(Exception).IsAssignableFrom(innerExceptionType))
             {
-                throw new ArgumentException("Expected inner exception type must derive from exception.", "innerExceptionType");
+                throw new ArgumentException("Expected inner exception type must derive from exception.", nameof(innerExceptionType));
             }
 
             ExceptionType = exceptionType;
@@ -43,19 +43,19 @@ namespace Affecto.Patterns.Domain.Tests.Infrastructure
             if (type != ExceptionType)
             {
                 RethrowIfAssertException(exception);
-                throw new Exception(string.Format("Expected exception type '{0}' but type '{1}' was thrown.", ExceptionType.FullName, type.FullName));
+                throw new Exception($"Expected exception type '{ExceptionType.FullName}' but type '{type.FullName}' was thrown.");
             }
 
             if (exception.InnerException == null)
             {
-                throw new Exception(string.Format("Expected inner exception type '{0}' but no inner exception was thrown.", InnerExceptionType.FullName));
+                throw new Exception($"Expected inner exception type '{InnerExceptionType.FullName}' but no inner exception was thrown.");
             }
 
             type = exception.InnerException.GetType();
             if (type != InnerExceptionType)
             {
                 RethrowIfAssertException(exception);
-                throw new Exception(string.Format("Expected inner exception type '{0}' but type '{1}' was thrown.", InnerExceptionType.FullName, type.FullName));
+                throw new Exception($"Expected inner exception type '{InnerExceptionType.FullName}' but type '{type.FullName}' was thrown.");
             }
         }
     }

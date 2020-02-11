@@ -26,12 +26,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// <param name="unitOfWork">The Unit of Work context instance.</param>
         protected CompositeUnitOfWorkDomainRepository(IDomainEventHandlerResolver eventHandlerResolver, IUnitOfWorkDomainEventHandlerResolver unitOfWorkEventHandlerResolver, TUnitOfWork unitOfWork)
         {
-            if (unitOfWork == null)
-            {
-                throw new ArgumentNullException("unitOfWork");
-            }
-
-            this.unitOfWork = unitOfWork;
+            this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             immediateEventBroker = new DomainEventBroker(eventHandlerResolver);
             unitOfWorkDomainEventBroker = new UnitOfWorkDomainEventBroker<TUnitOfWork>(unitOfWorkEventHandlerResolver, unitOfWork);
         }
@@ -57,12 +52,12 @@ namespace Affecto.Patterns.Domain.UnitOfWork
             }
 
             throw new IncompatibleAggregateRootTypeException(
-                   string.Format("Aggregate root of type '{0}' cannot be used through this composite domain repository.", aggregateRootType));
+                $"Aggregate root of type '{aggregateRootType}' cannot be used through this composite domain repository.");
         }
 
         /// <summary>
         /// Executes all unit-of-work events that have been applied to the given aggregate root instances, then commits the unit of work.
-        /// After a succesfull commit all other domain events are executed.
+        /// After a successful commit all other domain events are executed.
         /// </summary>
         /// <param name="aggregateWithFirstProcessedEvents">The changed aggregate root instance whose domain events will be executed first.</param>
         /// <param name="aggregateWithSecondProcessedEvents">The changed aggregate root instance whose domain events will be executed second.</param>
@@ -70,11 +65,11 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         {
             if (aggregateWithFirstProcessedEvents == null)
             {
-                throw new ArgumentNullException("aggregateWithFirstProcessedEvents");
+                throw new ArgumentNullException(nameof(aggregateWithFirstProcessedEvents));
             }
             if (aggregateWithSecondProcessedEvents == null)
             {
-                throw new ArgumentNullException("aggregateWithSecondProcessedEvents");
+                throw new ArgumentNullException(nameof(aggregateWithSecondProcessedEvents));
             }
 
             unitOfWorkDomainEventBroker.PublishEvents(aggregateWithFirstProcessedEvents.GetAppliedEvents());
@@ -87,7 +82,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork
 
         /// <summary>
         /// Executes all unit-of-work events that have been applied to the given aggregate root instances, then commits the unit of work.
-        /// After a succesfull commit all other domain events are executed.
+        /// After a successful commit all other domain events are executed.
         /// </summary>
         /// <param name="aggregateWithFirstProcessedEvents">The changed aggregate root instance whose domain events will be executed first.</param>
         /// <param name="aggregateWithSecondProcessedEvents">The changed aggregate root instance whose domain events will be executed second.</param>
@@ -95,11 +90,11 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         {
             if (aggregateWithFirstProcessedEvents == null)
             {
-                throw new ArgumentNullException("aggregateWithFirstProcessedEvents");
+                throw new ArgumentNullException(nameof(aggregateWithFirstProcessedEvents));
             }
             if (aggregateWithSecondProcessedEvents == null)
             {
-                throw new ArgumentNullException("aggregateWithSecondProcessedEvents");
+                throw new ArgumentNullException(nameof(aggregateWithSecondProcessedEvents));
             }
 
             unitOfWorkDomainEventBroker.PublishEvents(aggregateWithFirstProcessedEvents.GetAppliedEvents());

@@ -6,7 +6,7 @@ namespace Affecto.Patterns.Domain.Tests.TestHelpers
 {
     public class TestDomainEventBroker : DomainEventBroker
     {
-        public List<IDomainEvent> ExecutedEvents { get; private set; }
+        public List<IDomainEvent> ExecutedEvents { get; }
 
         public TestDomainEventBroker()
             : base(Substitute.For<IDomainEventHandlerResolver>())

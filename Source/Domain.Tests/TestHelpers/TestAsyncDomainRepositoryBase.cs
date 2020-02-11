@@ -10,10 +10,7 @@ namespace Affecto.Patterns.Domain.Tests.TestHelpers
         {
         }
 
-        public TestDomainEventBroker EventBroker
-        {
-            get { return (TestDomainEventBroker) domainEventBroker; }
-        }
+        public TestDomainEventBroker EventBroker => (TestDomainEventBroker) domainEventBroker;
 
         public override Task<TestAggregateRoot> FindAsync(Guid id)
         {

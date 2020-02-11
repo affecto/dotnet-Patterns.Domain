@@ -148,7 +148,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
 
             unitOfWork
                 .When(u => u.SaveChanges())
-                .Do(callInfo => { throw new InvalidOperationException(); });
+                .Do(callInfo => throw new InvalidOperationException());
 
             try
             {

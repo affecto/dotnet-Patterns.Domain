@@ -7,7 +7,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork
     /// </summary>
     /// <typeparam name="TAggregateRoot1">The first aggregate root type.</typeparam>
     /// <typeparam name="TAggregateRoot2">The second aggregate root type.</typeparam>
-    public interface ICompositeUnitOfWorkDomainRepository<TAggregateRoot1, TAggregateRoot2>
+    public interface ICompositeUnitOfWorkDomainRepository<in TAggregateRoot1, in TAggregateRoot2>
         where TAggregateRoot1 : AggregateRoot
         where TAggregateRoot2 : AggregateRoot
     {
