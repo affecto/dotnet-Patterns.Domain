@@ -53,10 +53,18 @@ namespace Affecto.Patterns.Domain
         /// <returns>A collection of domain events.</returns>
         public virtual IReadOnlyCollection<IDomainEvent> DequeuePendingEvents()
         {
-            List<DomainEvent> events = pendingEvents.ToList();
-
+            IReadOnlyCollection<IDomainEvent> events = GetPendingEvents();
             pendingEvents.Clear();
             return events;
+        }
+
+        /// <summary>
+        /// Returns all domain events that are pending for publishing.
+        /// </summary>
+        /// <returns>A collection of domain events.</returns>
+        public virtual IReadOnlyCollection<IDomainEvent> GetPendingEvents()
+        {
+            return pendingEvents.ToList();
         }
 
         /// <summary>
