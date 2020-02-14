@@ -111,8 +111,8 @@ namespace Affecto.Patterns.Domain.UnitOfWork
                 throw new ArgumentNullException(nameof(aggregateWithSecondProcessedEvents));
             }
 
-            IReadOnlyCollection<IDomainEvent> firstAggregatesEvents = aggregateWithFirstProcessedEvents.DequeuePendingEvents();
-            IReadOnlyCollection<IDomainEvent> secondAggregatesEvents = aggregateWithSecondProcessedEvents.DequeuePendingEvents();
+            IReadOnlyCollection<IDomainEvent> firstAggregatesEvents = aggregateWithFirstProcessedEvents.GetPendingEvents();
+            IReadOnlyCollection<IDomainEvent> secondAggregatesEvents = aggregateWithSecondProcessedEvents.GetPendingEvents();
 
             unitOfWorkDomainEventBroker.PublishEvents(firstAggregatesEvents);
             unitOfWorkDomainEventBroker.PublishEvents(secondAggregatesEvents);

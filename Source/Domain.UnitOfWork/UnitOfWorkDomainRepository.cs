@@ -42,7 +42,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork
                 throw new ArgumentNullException(nameof(aggregateRoot));
             }
 
-            IReadOnlyCollection<IDomainEvent> pendingEvents = aggregateRoot.DequeuePendingEvents();
+            IReadOnlyCollection<IDomainEvent> pendingEvents = aggregateRoot.GetPendingEvents();
 
             PublishPendingEvents(pendingEvents, domainEventBroker);
             unitOfWork.SaveChanges();
@@ -71,7 +71,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork
 
             foreach (TAggregate aggregateRoot in aggregateRoots)
             {
-                IReadOnlyCollection<IDomainEvent> pendingEvents = aggregateRoot.DequeuePendingEvents();
+                IReadOnlyCollection<IDomainEvent> pendingEvents = aggregateRoot.GetPendingEvents();
                 PublishPendingEvents(pendingEvents, domainEventBroker);
                 allEvents.AddRange(pendingEvents);
             }

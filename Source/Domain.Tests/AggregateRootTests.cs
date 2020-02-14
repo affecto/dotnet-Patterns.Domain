@@ -81,53 +81,53 @@ namespace Affecto.Patterns.Domain.Tests
             Assert.AreSame(domainEvent1, appliedEvents.ElementAt(1));
         }
 
-        [TestMethod]
-        public void DequeuedPendingEventsIsEmpty()
-        {
-            IEnumerable<IDomainEvent> appliedEvents = sut.GetPendingEvents();
+        //[TestMethod]
+        //public void DequeuedPendingEventsIsEmpty()
+        //{
+        //    IEnumerable<IDomainEvent> appliedEvents = sut.DequeuePendingEvents();
 
-            Assert.IsFalse(appliedEvents.Any());
-        }
+        //    Assert.IsFalse(appliedEvents.Any());
+        //}
 
-        [TestMethod]
-        public void DequeuedPendingEventIsReturned()
-        {
-            var domainEvent = new TestDomainEvent(Guid.NewGuid());
-            sut.AddEvent(domainEvent);
-            IEnumerable<IDomainEvent> appliedEvents = sut.DequeuePendingEvents();
+        //[TestMethod]
+        //public void DequeuedPendingEventIsReturned()
+        //{
+        //    var domainEvent = new TestDomainEvent(Guid.NewGuid());
+        //    sut.AddEvent(domainEvent);
+        //    IEnumerable<IDomainEvent> appliedEvents = sut.DequeuePendingEvents();
 
-            Assert.AreEqual(1, appliedEvents.Count());
-            Assert.AreSame(domainEvent, appliedEvents.Single());
-        }
+        //    Assert.AreEqual(1, appliedEvents.Count());
+        //    Assert.AreSame(domainEvent, appliedEvents.Single());
+        //}
 
-        [TestMethod]
-        public void DequeuedPendingEventsAreReturnedInAppliedOrder()
-        {
-            var domainEvent1 = new TestDomainEvent(Guid.NewGuid());
-            var domainEvent2 = new TestDomainEvent(Guid.NewGuid());
-            sut.AddEvent(domainEvent2);
-            sut.AddEvent(domainEvent1);
+        //[TestMethod]
+        //public void DequeuedPendingEventsAreReturnedInAppliedOrder()
+        //{
+        //    var domainEvent1 = new TestDomainEvent(Guid.NewGuid());
+        //    var domainEvent2 = new TestDomainEvent(Guid.NewGuid());
+        //    sut.AddEvent(domainEvent2);
+        //    sut.AddEvent(domainEvent1);
 
-            IEnumerable<IDomainEvent> appliedEvents = sut.DequeuePendingEvents();
+        //    IEnumerable<IDomainEvent> appliedEvents = sut.DequeuePendingEvents();
 
-            Assert.AreEqual(2, appliedEvents.Count());
-            Assert.AreSame(domainEvent2, appliedEvents.ElementAt(0));
-            Assert.AreSame(domainEvent1, appliedEvents.ElementAt(1));
-        }
+        //    Assert.AreEqual(2, appliedEvents.Count());
+        //    Assert.AreSame(domainEvent2, appliedEvents.ElementAt(0));
+        //    Assert.AreSame(domainEvent1, appliedEvents.ElementAt(1));
+        //}
 
-        [TestMethod]
-        public void PendingEventsAreClearedAfterDequeueing()
-        {
-            var domainEvent1 = new TestDomainEvent(Guid.NewGuid());
-            var domainEvent2 = new TestDomainEvent(Guid.NewGuid());
-            sut.AddEvent(domainEvent2);
-            sut.AddEvent(domainEvent1);
+        //[TestMethod]
+        //public void PendingEventsAreClearedAfterDequeueing()
+        //{
+        //    var domainEvent1 = new TestDomainEvent(Guid.NewGuid());
+        //    var domainEvent2 = new TestDomainEvent(Guid.NewGuid());
+        //    sut.AddEvent(domainEvent2);
+        //    sut.AddEvent(domainEvent1);
 
-            sut.DequeuePendingEvents();
-            IReadOnlyCollection<IDomainEvent> pendingEvents = sut.GetPendingEvents();
+        //    sut.DequeuePendingEvents();
+        //    IReadOnlyCollection<IDomainEvent> pendingEvents = sut.GetPendingEvents();
 
-            Assert.AreEqual(0, pendingEvents.Count);
-        }
+        //    Assert.AreEqual(0, pendingEvents.Count);
+        //}
 
         [TestMethod]
         public void VersionIsSetToPreviouslyGeneratedEvents()

@@ -34,7 +34,7 @@ namespace Affecto.Patterns.Domain
                 throw new ArgumentNullException(nameof(aggregateRoot));
             }
 
-            await PublishPendingEventsAsync(aggregateRoot.DequeuePendingEvents(), domainEventBroker).ConfigureAwait(false);
+            await PublishPendingEventsAsync(aggregateRoot.GetPendingEvents(), domainEventBroker).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Affecto.Patterns.Domain
 
             foreach (TAggregate aggregateRoot in aggregateRoots)
             {
-                await PublishPendingEventsAsync(aggregateRoot.DequeuePendingEvents(), domainEventBroker).ConfigureAwait(false);
+                await PublishPendingEventsAsync(aggregateRoot.GetPendingEvents(), domainEventBroker).ConfigureAwait(false);
             }
         }
 
