@@ -15,7 +15,7 @@
     <PackageTags>affecto pattern patterns domain driven design ddd aggregate root domain event autofac</PackageTags>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="5.0.0" />
+    <PackageReference Include="Autofac" Version="4.9.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj">
