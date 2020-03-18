@@ -47,17 +47,6 @@ namespace Affecto.Patterns.Domain
         {
         }
 
-        ///// <summary>
-        ///// Returns all domain events that are pending for publishing and dequeues them.
-        ///// </summary>
-        ///// <returns>A collection of domain events.</returns>
-        //public virtual IReadOnlyCollection<IDomainEvent> DequeuePendingEvents()
-        //{
-        //    IReadOnlyCollection<IDomainEvent> events = GetPendingEvents();
-        //    pendingEvents.Clear();
-        //    return events;
-        //}
-
         /// <summary>
         /// Returns all domain events that are pending for publishing.
         /// </summary>
