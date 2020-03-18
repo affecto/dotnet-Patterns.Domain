@@ -5,7 +5,7 @@
     <AssemblyName>Affecto.Patterns.Domain.UnitOfWork.Autofac</AssemblyName>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Version>6.0.0-prerelease06</Version>
-    <PackageReleaseNotes>Contains breaking changes. Dequeue events from aggregate root instead of just returning them. Some return types changed from IEnumerable to IReadOnlyCollection.</PackageReleaseNotes>
+    <PackageReleaseNotes>Contains breaking changes. Domain event handler interface is now synchronous and there are new base classes for both sync/async event handlers. Events are dequeued from aggregate root instead of just returning them. Some return types have changed from IEnumerable to IReadOnlyCollection.</PackageReleaseNotes>
     <Authors>CGI</Authors>
     <Company>CGI</Company>
     <Product>Affecto.Patterns.Domain</Product>
