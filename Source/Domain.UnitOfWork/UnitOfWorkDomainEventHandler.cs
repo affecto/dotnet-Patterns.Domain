@@ -11,7 +11,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         where TEvent : class, IDomainEvent
         where TUnitOfWork : class, IUnitOfWork
     {
-        Task IUnitOfWorkDomainEventHandler<TEvent, TUnitOfWork>.ExecuteAsync(TEvent @event, TUnitOfWork unitOfWork)
+        public Task ExecuteAsync(TEvent @event, TUnitOfWork unitOfWork)
         {
             Execute(@event, unitOfWork);
             return Task.CompletedTask;
