@@ -9,13 +9,13 @@ namespace Affecto.Patterns.Domain.UnitOfWork
     /// </summary>
     public class UnitOfWorkDomainEventHandlerResolver : IUnitOfWorkDomainEventHandlerResolver
     {
-        private readonly IEnumerable<IUnitOfWorkDomainEventHandler> eventHandlers;
+        private readonly IReadOnlyCollection<IUnitOfWorkDomainEventHandler> eventHandlers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitOfWorkDomainEventHandlerResolver"/> class.
         /// </summary>
         /// <param name="eventHandlers">A collection of domain event handler instances.</param>
-        public UnitOfWorkDomainEventHandlerResolver(IEnumerable<IUnitOfWorkDomainEventHandler> eventHandlers)
+        public UnitOfWorkDomainEventHandlerResolver(IReadOnlyCollection<IUnitOfWorkDomainEventHandler> eventHandlers)
         {
             this.eventHandlers = eventHandlers ?? throw new ArgumentNullException(nameof(eventHandlers));
         }
@@ -25,10 +25,10 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// </summary>
         /// <typeparam name="TEventHandler">The type of the domain event handler.</typeparam>
         /// <returns>A collection of event handler instances.</returns>
-        public IEnumerable<TEventHandler> ResolveEventHandlers<TEventHandler>()
+        public IReadOnlyCollection<TEventHandler> ResolveEventHandlers<TEventHandler>()
             where TEventHandler : class, IUnitOfWorkDomainEventHandler
         {
-            return eventHandlers.OfType<TEventHandler>();
+            return eventHandlers.OfType<TEventHandler>().ToList();
         }
     }
 }

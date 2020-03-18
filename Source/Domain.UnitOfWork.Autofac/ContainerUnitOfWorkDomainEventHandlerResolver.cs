@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Autofac;
 
 namespace Affecto.Patterns.Domain.UnitOfWork.Autofac
@@ -25,9 +26,10 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Autofac
         /// </summary>
         /// <typeparam name="TEventHandler">The type of the domain event handler.</typeparam>
         /// <returns>A collection of event handler instances.</returns>
-        public IEnumerable<TEventHandler> ResolveEventHandlers<TEventHandler>() where TEventHandler : class, IUnitOfWorkDomainEventHandler
+        public IReadOnlyCollection<TEventHandler> ResolveEventHandlers<TEventHandler>()
+            where TEventHandler : class, IUnitOfWorkDomainEventHandler
         {
-            return componentContext.Resolve<IEnumerable<TEventHandler>> ();
+            return componentContext.Resolve<IEnumerable<TEventHandler>>()?.ToList();
         }
     }
 }

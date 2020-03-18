@@ -1,9 +1,12 @@
-﻿namespace Affecto.Patterns.Domain.UnitOfWork.Autofac.Tests.TestHelpers
+﻿using System.Threading.Tasks;
+
+namespace Affecto.Patterns.Domain.UnitOfWork.Autofac.Tests.TestHelpers
 {
     public class TestUnitOfWork : IUnitOfWork
     {
-        public void SaveChanges()
+        public Task SaveChangesAsync()
         {
+            return Task.CompletedTask;
         }
     }
 }

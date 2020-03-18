@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Affecto.Patterns.Domain.UnitOfWork
 {
@@ -31,11 +32,11 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         }
 
         /// <summary>
-        /// Executes all unit-of-work events that have been applied to the given aggregate root instance, then commits the unit of work.
+        /// Asynchronously executes all unit-of-work events that have been applied to the given aggregate root instance, then commits the unit of work.
         /// After a successful commit all other domain events are executed.
         /// </summary>
         /// <param name="aggregateRoot">The changed aggregate root instance.</param>
-        public override void ApplyChanges(TAggregate aggregateRoot)
+        public override async Task ApplyChangesAsync(TAggregate aggregateRoot)
         {
             if (aggregateRoot == null)
             {
@@ -44,18 +45,18 @@ namespace Affecto.Patterns.Domain.UnitOfWork
 
             IReadOnlyCollection<IDomainEvent> pendingEvents = aggregateRoot.GetPendingEvents();
 
-            PublishPendingEvents(pendingEvents, domainEventBroker);
-            unitOfWork.SaveChanges();
+            await PublishPendingEventsAsync(pendingEvents, domainEventBroker).ConfigureAwait(false);
+            await unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
-            PublishPendingEvents(pendingEvents, immediateEventBroker);
+            await PublishPendingEventsAsync(pendingEvents, immediateEventBroker).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Executes all unit-of-work events that have been applied to the given set of aggregate root instances, then commits the unit of work.
+        /// Asynchronously executes all unit-of-work events that have been applied to the given set of aggregate root instances, then commits the unit of work.
         /// After a successful commit all other domain events are executed.
         /// </summary>
         /// <param name="aggregateRoots">The changed aggregate root instances.</param>
-        public override void ApplyChanges(IReadOnlyCollection<TAggregate> aggregateRoots)
+        public override async Task ApplyChangesAsync(IReadOnlyCollection<TAggregate> aggregateRoots)
         {
             if (aggregateRoots == null)
             {
@@ -67,18 +68,12 @@ namespace Affecto.Patterns.Domain.UnitOfWork
                 throw new ArgumentNullException(nameof(aggregateRoots), "Aggregate root list cannot contain null values.");
             }
 
-            var allEvents = new List<IDomainEvent>();
+            List<IDomainEvent> allEvents = aggregateRoots.SelectMany(a => a.GetPendingEvents()).ToList();
 
-            foreach (TAggregate aggregateRoot in aggregateRoots)
-            {
-                IReadOnlyCollection<IDomainEvent> pendingEvents = aggregateRoot.GetPendingEvents();
-                PublishPendingEvents(pendingEvents, domainEventBroker);
-                allEvents.AddRange(pendingEvents);
-            }
+            await PublishPendingEventsAsync(allEvents, domainEventBroker).ConfigureAwait(false);
+            await unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
-            unitOfWork.SaveChanges();
-
-            PublishPendingEvents(allEvents, immediateEventBroker);
+            await PublishPendingEventsAsync(allEvents, immediateEventBroker).ConfigureAwait(false);
         }
     }
 }

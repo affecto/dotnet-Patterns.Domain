@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace Affecto.Patterns.Domain
 {
     /// <summary>
@@ -15,9 +17,9 @@ namespace Affecto.Patterns.Domain
         where TEvent : class, IDomainEvent
     {
         /// <summary>
-        /// Executes the given domain event.
+        /// Executes the given domain event asynchronously.
         /// </summary>
         /// <param name="event">The domain event instance.</param>
-        void Execute(TEvent @event);
+        Task ExecuteAsync(TEvent @event);
     }
 }

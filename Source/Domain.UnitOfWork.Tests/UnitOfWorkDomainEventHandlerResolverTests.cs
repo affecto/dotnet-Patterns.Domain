@@ -14,13 +14,13 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
     [TestClass]
     public class UnitOfWorkDomainEventHandlerResolverTests
     {
-        private List<IUnitOfWorkDomainEventHandler> eventHandlers;
+        private List<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>> eventHandlers;
         private UnitOfWorkDomainEventHandlerResolver sut;
 
         [TestInitialize]
         public void Setup()
         {
-            eventHandlers = new List<IUnitOfWorkDomainEventHandler>();
+            eventHandlers = new List<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>>();
             sut = new UnitOfWorkDomainEventHandlerResolver(eventHandlers);
         }
 
@@ -36,7 +36,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
         {
             IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork> eventHandler = SetupEventHandler();
 
-            IEnumerable<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>> results = sut.ResolveEventHandlers<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>>();
+            var results = sut.ResolveEventHandlers<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>>();
 
             Assert.AreEqual(1, results.Count());
             Assert.AreSame(eventHandler, results.Single());
@@ -48,7 +48,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
             IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork> eventHandler1 = SetupEventHandler();
             IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork> eventHandler2 = SetupEventHandler();
 
-            IEnumerable<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>> results = sut.ResolveEventHandlers<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>>();
+            var results = sut.ResolveEventHandlers<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>>();
 
             Assert.AreEqual(2, results.Count());
             Assert.IsTrue(results.Contains(eventHandler1));
@@ -57,7 +57,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
 
         private IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork> SetupEventHandler()
         {
-            IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork> eventHandler = Substitute.For<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>>();
+            var eventHandler = Substitute.For<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>>();
             eventHandlers.Add(eventHandler);
             return eventHandler;
         }

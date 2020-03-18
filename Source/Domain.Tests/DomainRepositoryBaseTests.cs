@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Affecto.Patterns.Domain.Tests.TestHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -18,35 +19,45 @@ namespace Affecto.Patterns.Domain.Tests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void NullAggregateThrowsException()
+        public async Task NullAggregateThrowsException()
         {
-            sut.ApplyChanges((TestAggregateRoot) null);
+            await sut.ApplyChangesAsync((TestAggregateRoot) null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void NullAggregatesThrowsException()
+        public async Task NullAggregatesThrowsException()
         {
-            sut.ApplyChanges((IReadOnlyCollection<TestAggregateRoot>) null);
+            await sut.ApplyChangesAsync((IReadOnlyCollection<TestAggregateRoot>) null);
         }
 
         [TestMethod]
-        public void NoEventsExecutedIfNoAppliedEventsExist()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task SomeOfAggregatesNullThrowsException()
+        {
+            TestAggregateRoot aggregateRoot1 = new TestAggregateRoot(Guid.NewGuid());
+            TestAggregateRoot aggregateRoot2 = new TestAggregateRoot(Guid.NewGuid());
+
+            await sut.ApplyChangesAsync(new List<TestAggregateRoot> { aggregateRoot1, null, aggregateRoot2 });
+        }
+
+        [TestMethod]
+        public async Task NoEventsExecutedIfNoAppliedEventsExist()
         {
             TestAggregateRoot aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
-            sut.ApplyChanges(aggregateRoot);
+            await sut.ApplyChangesAsync(aggregateRoot);
 
             Assert.AreEqual(0, sut.EventBroker.ExecutedEvents.Count);
         }
 
         [TestMethod]
-        public void AllAppliedEventsAreExecuted()
+        public async Task AllAppliedEventsAreExecuted()
         {
             TestAggregateRoot aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
             var domainEvent1 = ApplyNewEvent(aggregateRoot);
             var domainEvent2 = ApplyNewEvent(aggregateRoot);
 
-            sut.ApplyChanges(aggregateRoot);
+            await sut.ApplyChangesAsync(aggregateRoot);
 
             Assert.AreEqual(2, sut.EventBroker.ExecutedEvents.Count);
             Assert.IsTrue(sut.EventBroker.ExecutedEvents.Contains(domainEvent1));
@@ -54,7 +65,7 @@ namespace Affecto.Patterns.Domain.Tests
         }
 
         [TestMethod]
-        public void AllAppliedEventsForAllAggregateRootsAreExecuted()
+        public async Task AllAppliedEventsForAllAggregateRootsAreExecuted()
         {
             TestAggregateRoot aggregateRoot1 = new TestAggregateRoot(Guid.NewGuid());
             var domainEvent1 = ApplyNewEvent(aggregateRoot1);
@@ -64,7 +75,7 @@ namespace Affecto.Patterns.Domain.Tests
             var domainEvent3 = ApplyNewEvent(aggregateRoot2);
             var domainEvent4 = ApplyNewEvent(aggregateRoot2);
 
-            sut.ApplyChanges(new List<TestAggregateRoot> { aggregateRoot1, aggregateRoot2 });
+            await sut.ApplyChangesAsync(new List<TestAggregateRoot> { aggregateRoot1, aggregateRoot2 });
 
             Assert.AreEqual(4, sut.EventBroker.ExecutedEvents.Count);
             Assert.IsTrue(sut.EventBroker.ExecutedEvents.Contains(domainEvent1));

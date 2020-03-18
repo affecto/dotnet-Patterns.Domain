@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace Affecto.Patterns.Domain.UnitOfWork
 {
     /// <summary>
@@ -17,10 +19,10 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         where TUnitOfWork : class, IUnitOfWork
     {
         /// <summary>
-        /// Executes the given domain event.
+        /// Executes the given domain event asynchronously.
         /// </summary>
         /// <param name="event">The domain event instance.</param>
         /// <param name="unitOfWork">The Unit of Work context instance.</param>
-        void Execute(TEvent @event, TUnitOfWork unitOfWork);
+        Task ExecuteAsync(TEvent @event, TUnitOfWork unitOfWork);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Affecto.Patterns.Domain.Tests.TestHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -43,22 +44,22 @@ namespace Affecto.Patterns.Domain.Tests
         }
 
         [TestMethod]
-        public void ResolvedEventHandlersAreExecutedInCorrectOrder()
+        public async Task ResolvedEventHandlersAreExecutedInCorrectOrder()
         {
             TestAggregateRoot aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
             aggregateRoot.AddEvent(domainEvent);
 
-            sut.ApplyChanges(aggregateRoot);
+            await sut.ApplyChangesAsync(aggregateRoot);
 
             Received.InOrder(() =>
             {
-                domainEventHandler1.Execute(domainEvent);
-                domainEventHandler2.Execute(domainEvent);
+                domainEventHandler1.ExecuteAsync(domainEvent);
+                domainEventHandler2.ExecuteAsync(domainEvent);
             });
         }
 
         [TestMethod]
-        public void InaccessibleTypeParameterCanBeUsed()
+        public async Task InaccessibleTypeParameterCanBeUsed()
         {
             // This test is necessary for checking that the repository can be used with inaccessible type parameters.
             // See the bug in .NET Framework: https://connect.microsoft.com/VisualStudio/feedback/details/672411/bug-in-dynamic-dispatch-when-using-generic-type-parameters
@@ -67,10 +68,13 @@ namespace Affecto.Patterns.Domain.Tests
             aggregateRoot.AddEvent(domainEvent);
 
             var privateSut = new InternalDomainRepository(eventHandlerResolver);
-            privateSut.ApplyChanges(aggregateRoot);
+            await privateSut.ApplyChangesAsync(aggregateRoot);
 
-            domainEventHandler1.Received().Execute(domainEvent);
-            domainEventHandler2.Received().Execute(domainEvent);
+            Received.InOrder(() =>
+            {
+                domainEventHandler1.ExecuteAsync(domainEvent);
+                domainEventHandler2.ExecuteAsync(domainEvent);
+            });
         }
     }
 }

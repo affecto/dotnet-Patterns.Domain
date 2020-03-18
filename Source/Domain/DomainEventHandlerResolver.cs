@@ -9,13 +9,13 @@ namespace Affecto.Patterns.Domain
     /// </summary>
     public class DomainEventHandlerResolver : IDomainEventHandlerResolver
     {
-        protected readonly IEnumerable<IDomainEventHandler> eventHandlers;
+        protected readonly IReadOnlyCollection<IDomainEventHandler> eventHandlers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DomainEventHandlerResolver"/> class.
         /// </summary>
         /// <param name="eventHandlers">A collection of domain event handler instances.</param>
-        public DomainEventHandlerResolver(IEnumerable<IDomainEventHandler> eventHandlers)
+        public DomainEventHandlerResolver(IReadOnlyCollection<IDomainEventHandler> eventHandlers)
         {
             this.eventHandlers = eventHandlers ?? throw new ArgumentNullException(nameof(eventHandlers));
         }
@@ -25,10 +25,10 @@ namespace Affecto.Patterns.Domain
         /// </summary>
         /// <typeparam name="TEventHandler">The type of the domain event handler.</typeparam>
         /// <returns>A collection of event handler instances.</returns>
-        public IEnumerable<TEventHandler> ResolveEventHandlers<TEventHandler>()
+        public IReadOnlyCollection<TEventHandler> ResolveEventHandlers<TEventHandler>()
             where TEventHandler : class, IDomainEventHandler
         {
-            return eventHandlers.OfType<TEventHandler>();
+            return eventHandlers.OfType<TEventHandler>().ToList();
         }
     }
 }

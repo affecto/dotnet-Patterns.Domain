@@ -14,11 +14,6 @@ namespace Affecto.Patterns.Domain.Tests.TestHelpers
             ExecutedEvents = new List<IDomainEvent>();
         }
 
-        protected override void Publish<TDomainEvent>(TDomainEvent domainEvent)
-        {
-            ExecutedEvents.Add(domainEvent);
-        }
-
         protected override Task PublishAsync<TDomainEvent>(TDomainEvent domainEvent)
         {
             return Task.Run(() => ExecutedEvents.Add(domainEvent));

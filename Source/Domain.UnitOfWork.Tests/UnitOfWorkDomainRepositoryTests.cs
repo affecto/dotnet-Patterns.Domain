@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Affecto.Patterns.Domain.Tests.TestHelpers;
 using Affecto.Patterns.Domain.UnitOfWork.Tests.TestHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -31,7 +32,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
         {
             unitOfWorkDomainEventHandler1 = Substitute.For<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>>();
             unitOfWorkDomainEventHandler2 = Substitute.For<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>>();
-            
+
             unitOfWorkDomainEventHandlers = new List<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>>
             {
                 unitOfWorkDomainEventHandler1,
@@ -66,104 +67,121 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void NullAggregateThrowsException()
+        public async Task NullAggregateThrowsException()
         {
-            sut.ApplyChanges((TestAggregateRoot) null);
+            await sut.ApplyChangesAsync((TestAggregateRoot) null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void NullAggregatesThrowsException()
+        public async Task NullAggregatesThrowsException()
         {
-            sut.ApplyChanges((IReadOnlyCollection<TestAggregateRoot>) null);
+            await sut.ApplyChangesAsync((IReadOnlyCollection<TestAggregateRoot>) null);
         }
 
         [TestMethod]
-        public void ResolvedUnitOfWorkEventHandlersAreExecutedInCorrectOrder()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task SomeOfAggregatesNullThrowsException()
+        {
+            TestAggregateRoot aggregateRoot1 = new TestAggregateRoot(Guid.NewGuid());
+            TestAggregateRoot aggregateRoot2 = new TestAggregateRoot(Guid.NewGuid());
+
+            await sut.ApplyChangesAsync(new List<TestAggregateRoot> { aggregateRoot1, null, aggregateRoot2 });
+        }
+
+        [TestMethod]
+        public async Task ResolvedUnitOfWorkEventHandlersAreExecutedInCorrectOrder()
         {
             TestAggregateRoot aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
             aggregateRoot.AddEvent(domainEvent);
 
-            sut.ApplyChanges(aggregateRoot);
-
-            unitOfWorkDomainEventHandler1.Received().Execute(domainEvent, unitOfWork);
-            unitOfWorkDomainEventHandler2.Received().Execute(domainEvent, unitOfWork);
-        }
-
-        [TestMethod]
-        public void ResolvedEventHandlersAreExecutedInCorrectOrder()
-        {
-            TestAggregateRoot aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
-            aggregateRoot.AddEvent(domainEvent);
-
-            sut.ApplyChanges(aggregateRoot);
+            await sut.ApplyChangesAsync(aggregateRoot);
 
             Received.InOrder(() =>
             {
-                unitOfWorkDomainEventHandler1.Execute(domainEvent, unitOfWork);
-                unitOfWorkDomainEventHandler2.Execute(domainEvent, unitOfWork);
-                domainEventHandler3.Execute(domainEvent);
-                domainEventHandler4.Execute(domainEvent);
+                unitOfWorkDomainEventHandler1.ExecuteAsync(domainEvent, unitOfWork);
+                unitOfWorkDomainEventHandler2.ExecuteAsync(domainEvent, unitOfWork);
             });
         }
 
         [TestMethod]
-        public void ChangesInUnitOfWorkAreSaved()
+        public async Task ResolvedEventHandlersAreExecutedInCorrectOrder()
         {
             TestAggregateRoot aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
             aggregateRoot.AddEvent(domainEvent);
 
-            sut.ApplyChanges(aggregateRoot);
+            await sut.ApplyChangesAsync(aggregateRoot);
 
-            unitOfWork.Received().SaveChanges();
+            Received.InOrder(() =>
+            {
+                unitOfWorkDomainEventHandler1.ExecuteAsync(domainEvent, unitOfWork);
+                unitOfWorkDomainEventHandler2.ExecuteAsync(domainEvent, unitOfWork);
+                domainEventHandler3.ExecuteAsync(domainEvent);
+                domainEventHandler4.ExecuteAsync(domainEvent);
+            });
         }
 
         [TestMethod]
-        public void MultipleChangesInUnitOfWorkAreSavedOnce()
+        public async Task ChangesInUnitOfWorkAreSaved()
+        {
+            TestAggregateRoot aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
+            aggregateRoot.AddEvent(domainEvent);
+
+            await sut.ApplyChangesAsync(aggregateRoot);
+
+            await unitOfWork.Received().SaveChangesAsync();
+        }
+
+        [TestMethod]
+        public async Task MultipleChangesInUnitOfWorkAreSavedOnce()
         {
             TestAggregateRoot aggregateRoot1 = new TestAggregateRoot(Guid.NewGuid());
             aggregateRoot1.AddEvent(domainEvent);
 
-            TestDomainEvent domainEvent2 = new TestDomainEvent(Guid.NewGuid());
-            unitOfWorkEventHandlerResolver.ResolveEventHandlers<IUnitOfWorkDomainEventHandler<TestDomainEvent, TestUnitOfWork>>().Returns(unitOfWorkDomainEventHandlers);
-
             TestAggregateRoot aggregateRoot2 = new TestAggregateRoot(Guid.NewGuid());
+            TestDomainEvent domainEvent2 = new TestDomainEvent(Guid.NewGuid());
             aggregateRoot2.AddEvent(domainEvent2);
 
-            sut.ApplyChanges(new List<TestAggregateRoot> { aggregateRoot1, aggregateRoot2 });
+            await sut.ApplyChangesAsync(new List<TestAggregateRoot> { aggregateRoot1, aggregateRoot2 });
 
             Received.InOrder(() =>
             {
-                unitOfWorkDomainEventHandler1.Execute(domainEvent, unitOfWork);
-                unitOfWorkDomainEventHandler1.Execute(domainEvent2, unitOfWork);
-                unitOfWork.SaveChanges();
+                unitOfWorkDomainEventHandler1.ExecuteAsync(domainEvent, unitOfWork);
+                unitOfWorkDomainEventHandler1.ExecuteAsync(domainEvent2, unitOfWork);
+                unitOfWork.SaveChangesAsync();
             });
+
+            await unitOfWork.Received(1).SaveChangesAsync();
         }
 
         [TestMethod]
-        public void OnlyUnitOfWorkEventsAreHandledIfCommitFails()
+        public async Task OnlyUnitOfWorkEventsAreHandledIfCommitFails()
         {
             TestAggregateRoot aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
             aggregateRoot.AddEvent(domainEvent);
 
             unitOfWork
-                .When(u => u.SaveChanges())
+                .When(u => u.SaveChangesAsync())
                 .Do(callInfo => throw new InvalidOperationException());
 
             try
             {
-                sut.ApplyChanges(aggregateRoot);
+                await sut.ApplyChangesAsync(aggregateRoot);
                 Assert.Fail("No exception thrown.");
             }
             catch (InvalidOperationException)
             {
             }
 
-            unitOfWorkDomainEventHandler1.Received().Execute(domainEvent, unitOfWork);
-            unitOfWorkDomainEventHandler2.Received().Execute(domainEvent, unitOfWork);
-            unitOfWork.Received().SaveChanges();
-            domainEventHandler3.DidNotReceive().Execute(domainEvent);
-            domainEventHandler4.DidNotReceive().Execute(domainEvent);
+            Received.InOrder(() =>
+            {
+                unitOfWorkDomainEventHandler1.ExecuteAsync(domainEvent, unitOfWork);
+                unitOfWorkDomainEventHandler2.ExecuteAsync(domainEvent, unitOfWork);
+                unitOfWork.SaveChangesAsync();
+            });
+
+            await domainEventHandler3.DidNotReceive().ExecuteAsync(domainEvent);
+            await domainEventHandler4.DidNotReceive().ExecuteAsync(domainEvent);
         }
     }
 }

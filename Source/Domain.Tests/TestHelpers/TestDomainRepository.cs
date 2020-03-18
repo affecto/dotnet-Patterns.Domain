@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Affecto.Patterns.Domain.Tests.TestHelpers
 {
@@ -9,7 +10,7 @@ namespace Affecto.Patterns.Domain.Tests.TestHelpers
         {
         }
 
-        public override TestAggregateRoot Find(Guid id)
+        public override Task<TestAggregateRoot> FindAsync(Guid id)
         {
             throw new NotImplementedException();
         }

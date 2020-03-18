@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Affecto.Patterns.Domain.UnitOfWork
 {
@@ -16,20 +17,20 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// </summary>
         /// <param name="id">Aggregate root instance id.</param>
         /// <returns>Aggregate root instance.</returns>
-        TAggregateRoot Find<TAggregateRoot>(Guid id) where TAggregateRoot : AggregateRoot;
+        Task<TAggregateRoot> FindAsync<TAggregateRoot>(Guid id) where TAggregateRoot : AggregateRoot;
 
         /// <summary>
         /// Executes all events that have been applied to the given aggregate root instance.
         /// </summary>
         /// <param name="aggregateWithFirstProcessedEvents">The changed aggregate root instance whose domain events will be executed first.</param>
         /// <param name="aggregateWithSecondProcessedEvents">The changed aggregate root instance whose domain events will be executed second.</param>
-        void ApplyChanges(TAggregateRoot1 aggregateWithFirstProcessedEvents, TAggregateRoot2 aggregateWithSecondProcessedEvents);
+        Task ApplyChangesAsync(TAggregateRoot1 aggregateWithFirstProcessedEvents, TAggregateRoot2 aggregateWithSecondProcessedEvents);
 
         /// <summary>
         /// Executes all events that have been applied to the given aggregate root instance.
         /// </summary>
         /// <param name="aggregateWithFirstProcessedEvents">The changed aggregate root instance whose domain events will be executed first.</param>
         /// <param name="aggregateWithSecondProcessedEvents">The changed aggregate root instance whose domain events will be executed second.</param>
-        void ApplyChanges(TAggregateRoot2 aggregateWithFirstProcessedEvents, TAggregateRoot1 aggregateWithSecondProcessedEvents);
+        Task ApplyChangesAsync(TAggregateRoot2 aggregateWithFirstProcessedEvents, TAggregateRoot1 aggregateWithSecondProcessedEvents);
     }
 }

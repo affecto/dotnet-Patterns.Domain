@@ -1,9 +1,12 @@
+using System.Threading.Tasks;
+
 namespace Affecto.Patterns.Domain.UnitOfWork.Tests.TestHelpers
 {
     internal class InternalUnitOfWork : IUnitOfWork
     {
-        public void SaveChanges()
+        public virtual Task SaveChangesAsync()
         {
+            return Task.CompletedTask;
         }
     }
 }

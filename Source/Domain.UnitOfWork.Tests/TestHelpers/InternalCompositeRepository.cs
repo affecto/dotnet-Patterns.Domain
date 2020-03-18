@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Affecto.Patterns.Domain.Tests.TestHelpers;
 
 namespace Affecto.Patterns.Domain.UnitOfWork.Tests.TestHelpers
@@ -10,12 +11,12 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests.TestHelpers
         {
         }
 
-        protected override InternalAggregateRoot FindAggregateRootOfFirstSpecifiedType(Guid id)
+        protected override Task<InternalAggregateRoot> FindAggregateRootOfFirstSpecifiedTypeAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        protected override TestAggregateRoot2 FindAggregateRootOfSecondSpecifiedType(Guid id)
+        protected override Task<TestAggregateRoot2> FindAggregateRootOfSecondSpecifiedTypeAsync(Guid id)
         {
             throw new NotImplementedException();
         }

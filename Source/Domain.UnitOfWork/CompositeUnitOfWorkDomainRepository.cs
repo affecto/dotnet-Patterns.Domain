@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Affecto.Patterns.Domain.UnitOfWork
 {
@@ -37,18 +38,18 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// </summary>
         /// <param name="id">Aggregate root instance id.</param>
         /// <returns>Aggregate root instance.</returns>
-        public TAggregateRoot Find<TAggregateRoot>(Guid id) where TAggregateRoot : AggregateRoot
+        public async Task<TAggregateRoot> FindAsync<TAggregateRoot>(Guid id) where TAggregateRoot : AggregateRoot
         {
             Type aggregateRootType = typeof(TAggregateRoot);
 
             if (aggregateRootType == typeof(TAggregateRoot1))
             {
-                TAggregateRoot1 aggregateRoot = FindAggregateRootOfFirstSpecifiedType(id);
+                TAggregateRoot1 aggregateRoot = await FindAggregateRootOfFirstSpecifiedTypeAsync(id).ConfigureAwait(false);
                 return (TAggregateRoot) Convert.ChangeType(aggregateRoot, typeof(TAggregateRoot1), null);
             }
             if (aggregateRootType == typeof(TAggregateRoot2))
             {
-                TAggregateRoot2 aggregateRoot = FindAggregateRootOfSecondSpecifiedType(id);
+                TAggregateRoot2 aggregateRoot = await FindAggregateRootOfSecondSpecifiedTypeAsync(id).ConfigureAwait(false);
                 return (TAggregateRoot) Convert.ChangeType(aggregateRoot, typeof(TAggregateRoot2), null);
             }
 
@@ -62,9 +63,9 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// </summary>
         /// <param name="aggregateWithFirstProcessedEvents">The changed aggregate root instance whose domain events will be executed first.</param>
         /// <param name="aggregateWithSecondProcessedEvents">The changed aggregate root instance whose domain events will be executed second.</param>
-        public void ApplyChanges(TAggregateRoot1 aggregateWithFirstProcessedEvents, TAggregateRoot2 aggregateWithSecondProcessedEvents)
+        public async Task ApplyChangesAsync(TAggregateRoot1 aggregateWithFirstProcessedEvents, TAggregateRoot2 aggregateWithSecondProcessedEvents)
         {
-            ApplyChangesToOrderedAggregates(aggregateWithFirstProcessedEvents, aggregateWithSecondProcessedEvents);
+            await ApplyChangesToOrderedAggregatesAsync(aggregateWithFirstProcessedEvents, aggregateWithSecondProcessedEvents).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -73,9 +74,9 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// </summary>
         /// <param name="aggregateWithFirstProcessedEvents">The changed aggregate root instance whose domain events will be executed first.</param>
         /// <param name="aggregateWithSecondProcessedEvents">The changed aggregate root instance whose domain events will be executed second.</param>
-        public void ApplyChanges(TAggregateRoot2 aggregateWithFirstProcessedEvents, TAggregateRoot1 aggregateWithSecondProcessedEvents)
+        public async Task ApplyChangesAsync(TAggregateRoot2 aggregateWithFirstProcessedEvents, TAggregateRoot1 aggregateWithSecondProcessedEvents)
         {
-            ApplyChangesToOrderedAggregates(aggregateWithFirstProcessedEvents, aggregateWithSecondProcessedEvents);
+            await ApplyChangesToOrderedAggregatesAsync(aggregateWithFirstProcessedEvents, aggregateWithSecondProcessedEvents).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -83,14 +84,14 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// </summary>
         /// <param name="id">Aggregate root instance id.</param>
         /// <returns>Aggregate root instance.</returns>
-        protected abstract TAggregateRoot1 FindAggregateRootOfFirstSpecifiedType(Guid id);
+        protected abstract Task<TAggregateRoot1> FindAggregateRootOfFirstSpecifiedTypeAsync(Guid id);
 
         /// <summary>
         /// Finds an aggregate root instance from the repository using its id.
         /// </summary>
         /// <param name="id">Aggregate root instance id.</param>
         /// <returns>Aggregate root instance.</returns>
-        protected abstract TAggregateRoot2 FindAggregateRootOfSecondSpecifiedType(Guid id);
+        protected abstract Task<TAggregateRoot2> FindAggregateRootOfSecondSpecifiedTypeAsync(Guid id);
 
         /// <summary>
         /// Executes all unit-of-work events that have been applied to the given aggregate root instances, then commits the unit of work.
@@ -98,7 +99,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// </summary>
         /// <param name="aggregateWithFirstProcessedEvents">The changed aggregate root instance whose domain events will be executed first.</param>
         /// <param name="aggregateWithSecondProcessedEvents">The changed aggregate root instance whose domain events will be executed second.</param>
-        private void ApplyChangesToOrderedAggregates<TAggregate1, TAggregate2>(TAggregate1 aggregateWithFirstProcessedEvents, TAggregate2 aggregateWithSecondProcessedEvents)
+        private async Task ApplyChangesToOrderedAggregatesAsync<TAggregate1, TAggregate2>(TAggregate1 aggregateWithFirstProcessedEvents, TAggregate2 aggregateWithSecondProcessedEvents)
             where TAggregate1 : AggregateRoot
             where TAggregate2 : AggregateRoot
         {
@@ -114,12 +115,12 @@ namespace Affecto.Patterns.Domain.UnitOfWork
             IReadOnlyCollection<IDomainEvent> firstAggregatesEvents = aggregateWithFirstProcessedEvents.GetPendingEvents();
             IReadOnlyCollection<IDomainEvent> secondAggregatesEvents = aggregateWithSecondProcessedEvents.GetPendingEvents();
 
-            unitOfWorkDomainEventBroker.PublishEvents(firstAggregatesEvents);
-            unitOfWorkDomainEventBroker.PublishEvents(secondAggregatesEvents);
-            unitOfWork.SaveChanges();
+            await unitOfWorkDomainEventBroker.PublishEventsAsync(firstAggregatesEvents).ConfigureAwait(false);
+            await unitOfWorkDomainEventBroker.PublishEventsAsync(secondAggregatesEvents).ConfigureAwait(false);
+            await unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
-            immediateEventBroker.PublishEvents(firstAggregatesEvents);
-            immediateEventBroker.PublishEvents(secondAggregatesEvents);
+            await immediateEventBroker.PublishEventsAsync(firstAggregatesEvents).ConfigureAwait(false);
+            await immediateEventBroker.PublishEventsAsync(secondAggregatesEvents).ConfigureAwait(false);
         }
     }
 }

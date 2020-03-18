@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Affecto.Patterns.Domain
 {
     /// <summary>
-    /// Base class for implementing domain repositories for aggregate root types.
+    /// Base class for implementing asynchronous domain repositories for aggregate root types.
     /// </summary>
     /// <typeparam name="TAggregate">The type of the aggregate root.</typeparam>
     public abstract class DomainRepositoryBase<TAggregate> : IDomainRepository<TAggregate>
@@ -23,24 +24,24 @@ namespace Affecto.Patterns.Domain
         }
 
         /// <summary>
-        /// Executes all events that have been applied to the given aggregate root instance.
+        /// Asynchronously executes all events that have been applied to the given aggregate root instance.
         /// </summary>
         /// <param name="aggregateRoot">The changed aggregate root instance.</param>
-        public virtual void ApplyChanges(TAggregate aggregateRoot)
+        public virtual async Task ApplyChangesAsync(TAggregate aggregateRoot)
         {
             if (aggregateRoot == null)
             {
                 throw new ArgumentNullException(nameof(aggregateRoot));
             }
 
-            PublishPendingEvents(aggregateRoot.GetPendingEvents(), domainEventBroker);
+            await PublishPendingEventsAsync(aggregateRoot.GetPendingEvents(), domainEventBroker).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Executes all events that have been applied to the given set of aggregate root instances.
+        /// Asynchronously executes all events that have been applied to the given set of aggregate root instances.
         /// </summary>
         /// <param name="aggregateRoots">The changed aggregate root instances.</param>
-        public virtual void ApplyChanges(IReadOnlyCollection<TAggregate> aggregateRoots)
+        public virtual async Task ApplyChangesAsync(IReadOnlyCollection<TAggregate> aggregateRoots)
         {
             if (aggregateRoots == null)
             {
@@ -54,25 +55,25 @@ namespace Affecto.Patterns.Domain
 
             foreach (TAggregate aggregateRoot in aggregateRoots)
             {
-                PublishPendingEvents(aggregateRoot.GetPendingEvents(), domainEventBroker);
+                await PublishPendingEventsAsync(aggregateRoot.GetPendingEvents(), domainEventBroker).ConfigureAwait(false);
             }
         }
 
         /// <summary>
-        /// Finds an aggregate root instance from the repository using its id.
+        /// Asynchronously finds an aggregate root instance from the repository using its id.
         /// </summary>
         /// <param name="id">Aggregate root instance id.</param>
         /// <returns>Aggregate root instance.</returns>
-        public abstract TAggregate Find(Guid id);
+        public abstract Task<TAggregate> FindAsync(Guid id);
 
         /// <summary>
-        /// Publishes all events that have been applied to the given aggregate root instance.
+        /// Asynchronously executes all events that have been applied to the given aggregate root instance.
         /// </summary>
         /// <param name="pendingEvents">A list of events pending for publishing.</param>
         /// <param name="eventBroker">The event broker to be used for publishing events.</param>
-        protected static void PublishPendingEvents(IEnumerable<IDomainEvent> pendingEvents, DomainEventBrokerBase eventBroker)
+        protected static async Task PublishPendingEventsAsync(IEnumerable<IDomainEvent> pendingEvents, DomainEventBrokerBase eventBroker)
         {
-            eventBroker.PublishEvents(pendingEvents);
+            await eventBroker.PublishEventsAsync(pendingEvents).ConfigureAwait(false);
         }
     }
 }

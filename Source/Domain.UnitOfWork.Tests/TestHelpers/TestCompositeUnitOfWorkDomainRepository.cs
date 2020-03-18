@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Affecto.Patterns.Domain.Tests.TestHelpers;
 
 namespace Affecto.Patterns.Domain.UnitOfWork.Tests.TestHelpers
@@ -10,14 +11,14 @@ namespace Affecto.Patterns.Domain.UnitOfWork.Tests.TestHelpers
         {
         }
 
-        protected override TestAggregateRoot FindAggregateRootOfFirstSpecifiedType(Guid id)
+        protected override Task<TestAggregateRoot> FindAggregateRootOfFirstSpecifiedTypeAsync(Guid id)
         {
-            return new TestAggregateRoot(Guid.NewGuid());
+            return Task.FromResult(new TestAggregateRoot(Guid.NewGuid()));
         }
 
-        protected override TestAggregateRoot2 FindAggregateRootOfSecondSpecifiedType(Guid id)
+        protected override Task<TestAggregateRoot2> FindAggregateRootOfSecondSpecifiedTypeAsync(Guid id)
         {
-            return new TestAggregateRoot2(Guid.NewGuid());
+            return Task.FromResult(new TestAggregateRoot2(Guid.NewGuid()));
         }
     }
 }

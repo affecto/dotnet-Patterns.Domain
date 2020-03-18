@@ -12,7 +12,7 @@ namespace Affecto.Patterns.Domain.UnitOfWork
         /// </summary>
         /// <typeparam name="TEventHandler">The type of the domain event handler.</typeparam>
         /// <returns>A collection of event handler instances.</returns>
-        IEnumerable<TEventHandler> ResolveEventHandlers<TEventHandler>()
+        IReadOnlyCollection<TEventHandler> ResolveEventHandlers<TEventHandler>()
             where TEventHandler : class, IUnitOfWorkDomainEventHandler;
     }
 }

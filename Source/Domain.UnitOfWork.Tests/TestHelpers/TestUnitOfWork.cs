@@ -1,9 +1,12 @@
-﻿namespace Affecto.Patterns.Domain.UnitOfWork.Tests.TestHelpers
+﻿using System.Threading.Tasks;
+
+namespace Affecto.Patterns.Domain.UnitOfWork.Tests.TestHelpers
 {
     public class TestUnitOfWork : IUnitOfWork
     {
-        public virtual void SaveChanges()
+        public virtual Task SaveChangesAsync()
         {
+            return Task.CompletedTask;
         }
     }
 }
