@@ -9,7 +9,7 @@ namespace Affecto.Patterns.Domain
     public abstract class DomainEventHandler<TEvent> : IDomainEventHandler<TEvent>
         where TEvent : class, IDomainEvent
     {
-        Task IDomainEventHandler<TEvent>.ExecuteAsync(TEvent @event)
+        public Task ExecuteAsync(TEvent @event)
         {
             Execute(@event);
             return Task.CompletedTask;

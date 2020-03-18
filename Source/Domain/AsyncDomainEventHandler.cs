@@ -9,11 +9,6 @@ namespace Affecto.Patterns.Domain
     public abstract class AsyncDomainEventHandler<TEvent> : IDomainEventHandler<TEvent>
         where TEvent : class, IDomainEvent
     {
-        async Task IDomainEventHandler<TEvent>.ExecuteAsync(TEvent @event)
-        {
-            await ExecuteAsync(@event).ConfigureAwait(false);
-        }
-
         public abstract Task ExecuteAsync(TEvent @event);
     }
 }
