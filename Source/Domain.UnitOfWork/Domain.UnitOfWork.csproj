@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>    
+    <RootNamespace>Affecto.Patterns.Domain.UnitOfWork</RootNamespace>
+    <AssemblyName>Affecto.Patterns.Domain.UnitOfWork</AssemblyName>    
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>6.0.0</Version>
+    <PackageReleaseNotes>Contains breaking changes. Unit of work has been changed to asynchronous. Domain event handler interface is now synchronous and there are new base classes for both sync/async event handlers. Some return types have changed from IEnumerable to IReadOnlyCollection.</PackageReleaseNotes>
+    <Authors>CGI</Authors>
+    <Company>CGI</Company>
+    <Product>Affecto.Patterns.Domain</Product>
+    <Description>Base implementation for domain repositories and domain events using the unit of work pattern.</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/affecto/dotnet-Patterns.Domain</PackageProjectUrl>
+    <PackageTags>affecto pattern patterns domain driven design ddd aggregate root domain event unit of work</PackageTags>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj">
+    </ProjectReference>
+  </ItemGroup>
+  
+</Project>

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Affecto.Patterns.Domain.UnitOfWork.Autofac</RootNamespace>
+    <AssemblyName>Affecto.Patterns.Domain.UnitOfWork.Autofac</AssemblyName>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>6.0.0</Version>
+    <PackageReleaseNotes>Contains breaking changes. Domain event handler interface is now synchronous and there are new base classes for both sync/async event handlers. Some return types have changed from IEnumerable to IReadOnlyCollection.</PackageReleaseNotes>
+    <Authors>CGI</Authors>
+    <Company>CGI</Company>
+    <Product>Affecto.Patterns.Domain</Product>
+    <Description>Autofac implementation for the domain event handler resolver defined in Affecto.Patterns.Domain.UnitOfWork NuGet.</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/affecto/dotnet-Patterns.Domain</PackageProjectUrl>
+    <PackageTags>affecto pattern patterns domain driven design ddd aggregate root domain event unit of work autofac</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Domain.Autofac\Domain.Autofac.csproj">
+    </ProjectReference>
+    <ProjectReference Include="..\Domain.UnitOfWork\Domain.UnitOfWork.csproj">
+    </ProjectReference>
+    <ProjectReference Include="..\Domain\Domain.csproj">
+    </ProjectReference>
+  </ItemGroup>
+  
+</Project>
